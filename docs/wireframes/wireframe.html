@@ -1,0 +1,2502 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ENZARA - Nước Rửa Chén Enzyme | Wireframe</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ========================================
+           CSS RESET & BASE STYLES
+           ======================================== */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            /* Primary Colors */
+            --primary-dark: #1B5E20;
+            --primary: #2E7D32;
+            --primary-light: #4CAF50;
+
+            /* Secondary Colors */
+            --secondary: #FF8F00;
+            --secondary-light: #F9A825;
+
+            /* Neutrals */
+            --neutral-dark: #212121;
+            --neutral-medium: #757575;
+            --neutral-light: #F5F5F5;
+            --white: #FFFFFF;
+
+            /* Semantic Colors */
+            --success: #4CAF50;
+            --warning: #FF8F00;
+            --error: #D32F2F;
+
+            /* Typography */
+            --font-heading: 'Be Vietnam Pro', sans-serif;
+            --font-body: 'Quicksand', sans-serif;
+
+            /* Spacing */
+            --space-xs: 0.25rem;
+            --space-sm: 0.5rem;
+            --space-md: 1rem;
+            --space-lg: 1.5rem;
+            --space-xl: 2rem;
+            --space-2xl: 3rem;
+            --space-3xl: 4rem;
+
+            /* Border Radius */
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+            --radius-full: 9999px;
+
+            /* Shadows */
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+            --shadow-xl: 0 20px 25px rgba(0,0,0,0.15);
+
+            /* Transitions */
+            --transition-fast: 150ms ease;
+            --transition-normal: 300ms ease;
+            --transition-slow: 500ms ease;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--neutral-dark);
+            background-color: var(--white);
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button {
+            font-family: inherit;
+            cursor: pointer;
+            border: none;
+            background: none;
+        }
+
+        ul, ol {
+            list-style: none;
+        }
+
+        /* ========================================
+           LAYOUT UTILITIES
+           ======================================== */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--space-md);
+        }
+
+        .section {
+            padding: var(--space-2xl) 0;
+        }
+
+        .section--alt {
+            background-color: var(--neutral-light);
+        }
+
+        .section--primary {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+
+        .section--dark {
+            background-color: var(--neutral-dark);
+            color: var(--white);
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .flex-col {
+            flex-direction: column;
+        }
+
+        .items-center {
+            align-items: center;
+        }
+
+        .justify-center {
+            justify-content: center;
+        }
+
+        .justify-between {
+            justify-content: space-between;
+        }
+
+        .gap-sm {
+            gap: var(--space-sm);
+        }
+
+        .gap-md {
+            gap: var(--space-md);
+        }
+
+        .gap-lg {
+            gap: var(--space-lg);
+        }
+
+        /* ========================================
+           TYPOGRAPHY
+           ======================================== */
+        .heading-1 {
+            font-size: clamp(1.75rem, 5vw, 3rem);
+            font-weight: 800;
+        }
+
+        .heading-2 {
+            font-size: clamp(1.5rem, 4vw, 2.25rem);
+            font-weight: 700;
+        }
+
+        .heading-3 {
+            font-size: clamp(1.25rem, 3vw, 1.75rem);
+            font-weight: 600;
+        }
+
+        .heading-4 {
+            font-size: clamp(1.1rem, 2.5vw, 1.35rem);
+            font-weight: 600;
+        }
+
+        .body-lg {
+            font-size: 1.125rem;
+        }
+
+        .body-sm {
+            font-size: 0.875rem;
+        }
+
+        .text-muted {
+            color: var(--neutral-medium);
+        }
+
+        .text-primary {
+            color: var(--primary);
+        }
+
+        .text-secondary {
+            color: var(--secondary);
+        }
+
+        /* ========================================
+           BUTTONS
+           ======================================== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+            padding: var(--space-md) var(--space-xl);
+            font-family: var(--font-heading);
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: var(--radius-lg);
+            transition: all var(--transition-normal);
+        }
+
+        .btn--primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: var(--white);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn--primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn--secondary {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-light) 100%);
+            color: var(--white);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn--secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn--outline {
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            background: transparent;
+        }
+
+        .btn--outline:hover {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .btn--lg {
+            padding: var(--space-lg) var(--space-2xl);
+            font-size: 1.125rem;
+        }
+
+        .btn--full {
+            width: 100%;
+        }
+
+        /* ========================================
+           CARDS
+           ======================================== */
+        .card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            box-shadow: var(--shadow-md);
+            transition: all var(--transition-normal);
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* ========================================
+           BADGES
+           ======================================== */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: var(--space-xs) var(--space-md);
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: var(--radius-full);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge--sale {
+            background: var(--secondary);
+            color: var(--white);
+        }
+
+        .badge--free {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .badge--hot {
+            background: var(--error);
+            color: var(--white);
+        }
+
+        /* ========================================
+           SECTION 1: HERO
+           ======================================== */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 50%, var(--primary-light) 100%);
+            color: var(--white);
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.5;
+        }
+
+        .hero__content {
+            position: relative;
+            z-index: 1;
+            padding: var(--space-3xl) var(--space-md);
+            text-align: center;
+        }
+
+        .hero__badge {
+            display: inline-block;
+            background: var(--secondary);
+            color: var(--white);
+            padding: var(--space-sm) var(--space-lg);
+            border-radius: var(--radius-full);
+            font-weight: 700;
+            font-size: 0.875rem;
+            margin-bottom: var(--space-lg);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .hero__title {
+            font-size: clamp(2rem, 6vw, 3.5rem);
+            font-weight: 800;
+            margin-bottom: var(--space-md);
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .hero__subtitle {
+            font-size: clamp(1.125rem, 3vw, 1.5rem);
+            font-weight: 500;
+            margin-bottom: var(--space-lg);
+            opacity: 0.9;
+        }
+
+        .hero__price-box {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-xl);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-xl);
+            display: inline-block;
+        }
+
+        .hero__original-price {
+            font-size: 1.25rem;
+            text-decoration: line-through;
+            opacity: 0.7;
+        }
+
+        .hero__sale-price {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 800;
+            color: var(--secondary-light);
+        }
+
+        .hero__cta-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+            align-items: center;
+        }
+
+        .hero__trust {
+            margin-top: var(--space-xl);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: var(--space-lg);
+            opacity: 0.8;
+            font-size: 0.875rem;
+        }
+
+        .hero__trust-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+
+        /* Product image placeholder */
+        .hero__image {
+            margin-top: var(--space-xl);
+        }
+
+        .hero__image-placeholder {
+            width: 280px;
+            height: 350px;
+            background: rgba(255,255,255,0.1);
+            border: 2px dashed rgba(255,255,255,0.3);
+            border-radius: var(--radius-xl);
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            opacity: 0.7;
+        }
+
+        /* ========================================
+           SECTION 2: BENEFITS BAR
+           ======================================== */
+        .benefits-bar {
+            background: var(--white);
+            padding: var(--space-lg) 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .benefits-bar__grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-md);
+        }
+
+        @media (min-width: 768px) {
+            .benefits-bar__grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .benefits-bar__grid {
+                grid-template-columns: repeat(6, 1fr);
+            }
+        }
+
+        .benefits-bar__item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: var(--space-xs);
+        }
+
+        .benefits-bar__icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-light);
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.25rem;
+        }
+
+        .benefits-bar__text {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--neutral-dark);
+        }
+
+        /* ========================================
+           SECTION 3: PAIN POINTS
+           ======================================== */
+        .pain-points {
+            background: var(--neutral-light);
+            padding: var(--space-3xl) 0;
+        }
+
+        .pain-points__header {
+            text-align: center;
+            margin-bottom: var(--space-2xl);
+        }
+
+        .pain-points__title {
+            color: var(--neutral-dark);
+            margin-bottom: var(--space-md);
+        }
+
+        .pain-points__subtitle {
+            color: var(--neutral-medium);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .pain-points__grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--space-lg);
+        }
+
+        @media (min-width: 768px) {
+            .pain-points__grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .pain-point-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            display: flex;
+            gap: var(--space-md);
+            box-shadow: var(--shadow-sm);
+            border-left: 4px solid var(--error);
+        }
+
+        .pain-point-card__icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(211, 47, 47, 0.1);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--error);
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .pain-point-card__content h4 {
+            color: var(--neutral-dark);
+            margin-bottom: var(--space-xs);
+        }
+
+        .pain-point-card__content p {
+            color: var(--neutral-medium);
+            font-size: 0.875rem;
+        }
+
+        /* ========================================
+           SECTION 4: AUTHORITY / TRUST BADGES
+           ======================================== */
+        .authority {
+            background: var(--white);
+            padding: var(--space-3xl) 0;
+        }
+
+        .authority__header {
+            text-align: center;
+            margin-bottom: var(--space-2xl);
+        }
+
+        .authority__badges {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: var(--space-xl);
+            margin-bottom: var(--space-2xl);
+        }
+
+        .authority__badge {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: var(--space-sm);
+        }
+
+        .authority__badge-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--neutral-light);
+            border: 2px dashed var(--neutral-medium);
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            color: var(--neutral-medium);
+        }
+
+        .authority__badge-text {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--neutral-dark);
+        }
+
+        .authority__stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-lg);
+            text-align: center;
+        }
+
+        @media (min-width: 768px) {
+            .authority__stats {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .authority__stat {
+            padding: var(--space-lg);
+        }
+
+        .authority__stat-number {
+            font-family: var(--font-heading);
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .authority__stat-label {
+            font-size: 0.875rem;
+            color: var(--neutral-medium);
+        }
+
+        /* ========================================
+           SECTION 5: BEFORE/AFTER STORY
+           ======================================== */
+        .before-after {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+            color: var(--white);
+            padding: var(--space-3xl) 0;
+        }
+
+        .before-after__header {
+            text-align: center;
+            margin-bottom: var(--space-2xl);
+        }
+
+        .before-after__comparison {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--space-lg);
+        }
+
+        @media (min-width: 768px) {
+            .before-after__comparison {
+                grid-template-columns: 1fr auto 1fr;
+                align-items: stretch;
+            }
+        }
+
+        .before-after__panel {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-xl);
+            padding: var(--space-xl);
+        }
+
+        .before-after__panel--before {
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+
+        .before-after__panel--after {
+            border: 2px solid var(--secondary);
+            background: rgba(255,255,255,0.15);
+        }
+
+        .before-after__panel-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-lg);
+        }
+
+        .before-after__panel-badge {
+            padding: var(--space-xs) var(--space-md);
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .before-after__panel--before .before-after__panel-badge {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .before-after__panel--after .before-after__panel-badge {
+            background: var(--secondary);
+        }
+
+        .before-after__list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+
+        .before-after__list-item {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-sm);
+        }
+
+        .before-after__list-icon {
+            flex-shrink: 0;
+            font-size: 1.25rem;
+        }
+
+        .before-after__arrow {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--secondary);
+        }
+
+        @media (min-width: 768px) {
+            .before-after__arrow {
+                display: flex;
+            }
+        }
+
+        /* ========================================
+           SECTION 6: BENEFITS GRID
+           ======================================== */
+        .benefits-grid {
+            background: var(--white);
+            padding: var(--space-3xl) 0;
+        }
+
+        .benefits-grid__header {
+            text-align: center;
+            margin-bottom: var(--space-2xl);
+        }
+
+        .benefits-grid__cards {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--space-lg);
+        }
+
+        @media (min-width: 640px) {
+            .benefits-grid__cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .benefits-grid__cards {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .benefit-card {
+            background: var(--neutral-light);
+            border-radius: var(--radius-xl);
+            padding: var(--space-xl);
+            text-align: center;
+            transition: all var(--transition-normal);
+            border: 2px solid transparent;
+        }
+
+        .benefit-card:hover {
+            border-color: var(--primary-light);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .benefit-card__icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--space-md);
+            color: var(--white);
+            font-size: 1.75rem;
+        }
+
+        .benefit-card__title {
+            color: var(--neutral-dark);
+            margin-bottom: var(--space-sm);
+        }
+
+        .benefit-card__desc {
+            color: var(--neutral-medium);
+            font-size: 0.875rem;
+        }
+
+        /* ========================================
+           SECTION 7: VALUE STACK
+           ======================================== */
+        .value-stack {
+            background: var(--neutral-light);
+            padding: var(--space-3xl) 0;
+        }
+
+        .value-stack__header {
+            text-align: center;
+            margin-bottom: var(--space-2xl);
+        }
+
+        .value-stack__items {
+            max-width: 600px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+
+        .value-stack__item {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .value-stack__item-name {
+            font-weight: 600;
+            color: var(--neutral-dark);
+        }
+
+        .value-stack__item-value {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .value-stack__total {
+            background: var(--primary);
+            color: var(--white);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            text-align: center;
+            margin-top: var(--space-lg);
+        }
+
+        .value-stack__total-label {
+            font-size: 0.875rem;
+            opacity: 0.9;
+            margin-bottom: var(--space-xs);
+        }
+
+        .value-stack__total-value {
+            font-family: var(--font-heading);
+            font-size: clamp(1.75rem, 4vw, 2.5rem);
+            font-weight: 800;
+        }
+
+        .value-stack__savings {
+            margin-top: var(--space-sm);
+            font-size: 1rem;
+            color: var(--secondary-light);
+        }
+
+        /* ========================================
+           SECTION 8: FAQ ACCORDION
+           ======================================== */
+        .faq {
+            background: var(--white);
+            padding: var(--space-3xl) 0;
+        }
+
+        .faq__header {
+            text-align: center;
+            margin-bottom: var(--space-2xl);
+        }
+
+        .faq__list {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+
+        .faq__item {
+            background: var(--neutral-light);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+
+        .faq__question {
+            width: 100%;
+            padding: var(--space-lg);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: var(--font-heading);
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--neutral-dark);
+            text-align: left;
+            cursor: pointer;
+            transition: background var(--transition-fast);
+        }
+
+        .faq__question:hover {
+            background: rgba(0,0,0,0.02);
+        }
+
+        .faq__question-icon {
+            font-size: 1.5rem;
+            color: var(--primary);
+            transition: transform var(--transition-fast);
+        }
+
+        .faq__item.active .faq__question-icon {
+            transform: rotate(45deg);
+        }
+
+        .faq__answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height var(--transition-normal);
+        }
+
+        .faq__item.active .faq__answer {
+            max-height: 500px;
+        }
+
+        .faq__answer-content {
+            padding: 0 var(--space-lg) var(--space-lg);
+            color: var(--neutral-medium);
+        }
+
+        /* ========================================
+           SECTION 9: WHY THIS PRICE
+           ======================================== */
+        .why-price {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-light) 100%);
+            color: var(--white);
+            padding: var(--space-3xl) 0;
+        }
+
+        .why-price__header {
+            text-align: center;
+            margin-bottom: var(--space-2xl);
+        }
+
+        .why-price__content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .why-price__reasons {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-lg);
+        }
+
+        .why-price__reason {
+            display: flex;
+            gap: var(--space-md);
+            align-items: flex-start;
+        }
+
+        .why-price__reason-number {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-heading);
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .why-price__reason-content h4 {
+            margin-bottom: var(--space-xs);
+        }
+
+        .why-price__reason-content p {
+            opacity: 0.9;
+            font-size: 0.9375rem;
+        }
+
+        /* ========================================
+           SECTION 10: PRICE COMPARISON TABLE
+           ======================================== */
+        .price-comparison {
+            background: var(--neutral-light);
+            padding: var(--space-3xl) 0;
+        }
+
+        .price-comparison__header {
+            text-align: center;
+            margin-bottom: var(--space-2xl);
+        }
+
+        .price-comparison__table-wrapper {
+            overflow-x: auto;
+        }
+
+        .price-comparison__table {
+            width: 100%;
+            min-width: 500px;
+            border-collapse: collapse;
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+
+        .price-comparison__table th,
+        .price-comparison__table td {
+            padding: var(--space-md) var(--space-lg);
+            text-align: left;
+            border-bottom: 1px solid var(--neutral-light);
+        }
+
+        .price-comparison__table th {
+            background: var(--primary);
+            color: var(--white);
+            font-family: var(--font-heading);
+            font-weight: 600;
+        }
+
+        .price-comparison__table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .price-comparison__table tr:nth-child(even) {
+            background: var(--neutral-light);
+        }
+
+        .price-comparison__highlight {
+            background: rgba(76, 175, 80, 0.1) !important;
+        }
+
+        .price-comparison__highlight td {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .price-comparison__badge {
+            background: var(--primary);
+            color: var(--white);
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            margin-left: var(--space-sm);
+        }
+
+        /* ========================================
+           SECTION 11: ORIGINAL PRICE DISPLAY
+           ======================================== */
+        .original-price {
+            background: var(--white);
+            padding: var(--space-3xl) 0;
+        }
+
+        .original-price__content {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .original-price__label {
+            font-size: 1.125rem;
+            color: var(--neutral-medium);
+            margin-bottom: var(--space-sm);
+        }
+
+        .original-price__value {
+            font-family: var(--font-heading);
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 800;
+            color: var(--neutral-medium);
+            text-decoration: line-through;
+            text-decoration-color: var(--error);
+            margin-bottom: var(--space-lg);
+        }
+
+        .original-price__arrow {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: var(--space-lg);
+        }
+
+        .original-price__sale-label {
+            font-size: 1.125rem;
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: var(--space-sm);
+        }
+
+        .original-price__sale-value {
+            font-family: var(--font-heading);
+            font-size: clamp(3rem, 8vw, 5rem);
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .original-price__savings-badge {
+            display: inline-block;
+            background: var(--secondary);
+            color: var(--white);
+            padding: var(--space-sm) var(--space-lg);
+            border-radius: var(--radius-full);
+            font-weight: 700;
+            margin-top: var(--space-lg);
+        }
+
+        /* ========================================
+           SECTION 12: BONUS GIFT SHOWCASE
+           ======================================== */
+        .bonus-gift {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: var(--white);
+            padding: var(--space-3xl) 0;
+        }
+
+        .bonus-gift__header {
+            text-align: center;
+            margin-bottom: var(--space-2xl);
+        }
+
+        .bonus-gift__card {
+            max-width: 500px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-xl);
+            padding: var(--space-xl);
+            text-align: center;
+            border: 2px dashed rgba(255,255,255,0.3);
+        }
+
+        .bonus-gift__badge {
+            display: inline-block;
+            background: var(--secondary);
+            color: var(--white);
+            padding: var(--space-xs) var(--space-md);
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: var(--space-lg);
+        }
+
+        .bonus-gift__image {
+            width: 150px;
+            height: 150px;
+            background: rgba(255,255,255,0.1);
+            border: 2px dashed rgba(255,255,255,0.3);
+            border-radius: var(--radius-lg);
+            margin: 0 auto var(--space-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            opacity: 0.7;
+        }
+
+        .bonus-gift__title {
+            margin-bottom: var(--space-sm);
+        }
+
+        .bonus-gift__desc {
+            opacity: 0.9;
+            margin-bottom: var(--space-md);
+        }
+
+        .bonus-gift__value {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .bonus-gift__value-label {
+            font-size: 0.875rem;
+            opacity: 0.8;
+        }
+
+        /* ========================================
+           SECTION 13: TESTIMONIALS
+           ======================================== */
+        .testimonials {
+            background: var(--neutral-light);
+            padding: var(--space-3xl) 0;
+        }
+
+        .testimonials__header {
+            text-align: center;
+            margin-bottom: var(--space-2xl);
+        }
+
+        .testimonials__grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--space-lg);
+        }
+
+        @media (min-width: 768px) {
+            .testimonials__grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .testimonial-card {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            padding: var(--space-xl);
+            box-shadow: var(--shadow-md);
+        }
+
+        .testimonial-card__header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            margin-bottom: var(--space-md);
+        }
+
+        .testimonial-card__avatar {
+            width: 56px;
+            height: 56px;
+            background: var(--neutral-light);
+            border: 2px dashed var(--neutral-medium);
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.625rem;
+            color: var(--neutral-medium);
+        }
+
+        .testimonial-card__info h4 {
+            color: var(--neutral-dark);
+            margin-bottom: var(--space-xs);
+        }
+
+        .testimonial-card__info p {
+            font-size: 0.75rem;
+            color: var(--neutral-medium);
+        }
+
+        .testimonial-card__rating {
+            color: var(--secondary);
+            font-size: 1rem;
+            margin-bottom: var(--space-md);
+        }
+
+        .testimonial-card__content {
+            color: var(--neutral-dark);
+            font-style: italic;
+        }
+
+        /* ========================================
+           SECTION 14: SCARCITY COUNTDOWN
+           ======================================== */
+        .scarcity {
+            background: var(--neutral-dark);
+            color: var(--white);
+            padding: var(--space-2xl) 0;
+        }
+
+        .scarcity__content {
+            text-align: center;
+        }
+
+        .scarcity__badge {
+            display: inline-block;
+            background: var(--error);
+            color: var(--white);
+            padding: var(--space-xs) var(--space-md);
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: var(--space-md);
+            animation: pulse 1.5s infinite;
+        }
+
+        .scarcity__title {
+            margin-bottom: var(--space-lg);
+        }
+
+        .scarcity__countdown {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-md);
+            margin-bottom: var(--space-lg);
+        }
+
+        .scarcity__countdown-item {
+            background: rgba(255,255,255,0.1);
+            border-radius: var(--radius-lg);
+            padding: var(--space-md) var(--space-lg);
+            min-width: 70px;
+        }
+
+        .scarcity__countdown-number {
+            font-family: var(--font-heading);
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-weight: 800;
+            color: var(--secondary);
+        }
+
+        .scarcity__countdown-label {
+            font-size: 0.75rem;
+            opacity: 0.7;
+        }
+
+        .scarcity__stock {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .scarcity__stock-number {
+            color: var(--secondary);
+            font-weight: 700;
+        }
+
+        /* ========================================
+           SECTION 15: FINAL PRICE SUMMARY
+           ======================================== */
+        .final-price {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+            color: var(--white);
+            padding: var(--space-3xl) 0;
+        }
+
+        .final-price__content {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .final-price__summary {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-xl);
+            padding: var(--space-xl);
+            margin-bottom: var(--space-xl);
+        }
+
+        .final-price__item {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--space-md) 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .final-price__item:last-child {
+            border-bottom: none;
+        }
+
+        .final-price__item--total {
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .final-price__item--total .final-price__value {
+            color: var(--secondary-light);
+        }
+
+        .final-price__free-ship {
+            background: var(--secondary);
+            border-radius: var(--radius-lg);
+            padding: var(--space-md) var(--space-lg);
+            margin-bottom: var(--space-xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+        }
+
+        .final-price__guarantee {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: var(--space-lg);
+            opacity: 0.9;
+            font-size: 0.875rem;
+        }
+
+        .final-price__guarantee-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+
+        /* ========================================
+           SECTION 16: ORDER FORM
+           ======================================== */
+        .order-form {
+            background: var(--white);
+            padding: var(--space-3xl) 0;
+        }
+
+        .order-form__header {
+            text-align: center;
+            margin-bottom: var(--space-2xl);
+        }
+
+        .order-form__container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .order-form__form {
+            background: var(--neutral-light);
+            border-radius: var(--radius-xl);
+            padding: var(--space-xl);
+        }
+
+        .order-form__group {
+            margin-bottom: var(--space-lg);
+        }
+
+        .order-form__label {
+            display: block;
+            font-weight: 600;
+            color: var(--neutral-dark);
+            margin-bottom: var(--space-sm);
+        }
+
+        .order-form__input {
+            width: 100%;
+            padding: var(--space-md);
+            font-family: var(--font-body);
+            font-size: 1rem;
+            border: 2px solid var(--neutral-light);
+            border-radius: var(--radius-md);
+            background: var(--white);
+            transition: border-color var(--transition-fast);
+        }
+
+        .order-form__input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .order-form__input::placeholder {
+            color: var(--neutral-medium);
+        }
+
+        .order-form__select {
+            width: 100%;
+            padding: var(--space-md);
+            font-family: var(--font-body);
+            font-size: 1rem;
+            border: 2px solid var(--neutral-light);
+            border-radius: var(--radius-md);
+            background: var(--white);
+            cursor: pointer;
+        }
+
+        .order-form__quantity {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+        }
+
+        .order-form__quantity-btn {
+            width: 44px;
+            height: 44px;
+            background: var(--primary);
+            color: var(--white);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: background var(--transition-fast);
+        }
+
+        .order-form__quantity-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .order-form__quantity-input {
+            width: 80px;
+            text-align: center;
+            font-size: 1.25rem;
+            font-weight: 700;
+            padding: var(--space-md);
+            border: 2px solid var(--neutral-light);
+            border-radius: var(--radius-md);
+        }
+
+        .order-form__submit {
+            width: 100%;
+            padding: var(--space-lg);
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-light) 100%);
+            color: var(--white);
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            font-weight: 700;
+            border: none;
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .order-form__submit:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .order-form__note {
+            text-align: center;
+            margin-top: var(--space-lg);
+            font-size: 0.875rem;
+            color: var(--neutral-medium);
+        }
+
+        .order-form__contact {
+            text-align: center;
+            margin-top: var(--space-xl);
+            padding-top: var(--space-xl);
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .order-form__contact-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-sm);
+            color: var(--neutral-dark);
+        }
+
+        .order-form__contact-item a {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* ========================================
+           FOOTER
+           ======================================== */
+        .footer {
+            background: var(--neutral-dark);
+            color: var(--white);
+            padding: var(--space-xl) 0;
+            text-align: center;
+        }
+
+        .footer__content {
+            opacity: 0.8;
+            font-size: 0.875rem;
+        }
+
+        /* ========================================
+           WIREFRAME ANNOTATIONS
+           ======================================== */
+        .wireframe-note {
+            position: relative;
+        }
+
+        .wireframe-note::after {
+            content: attr(data-note);
+            position: absolute;
+            top: var(--space-sm);
+            right: var(--space-sm);
+            background: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            font-size: 0.625rem;
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-sm);
+            font-family: monospace;
+            white-space: nowrap;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity var(--transition-fast);
+            pointer-events: none;
+        }
+
+        .wireframe-note:hover::after {
+            opacity: 1;
+        }
+
+        /* Debug grid overlay */
+        .debug-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 9999;
+            display: none;
+        }
+
+        .debug-grid.active {
+            display: block;
+            background: repeating-linear-gradient(
+                90deg,
+                rgba(255, 0, 0, 0.05) 0px,
+                rgba(255, 0, 0, 0.05) calc(100% / 12),
+                transparent calc(100% / 12),
+                transparent calc(100% / 12 * 2)
+            );
+        }
+
+        /* Print styles */
+        @media print {
+            .wireframe-note::after {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ========================================
+         SECTION 1: HERO
+         ======================================== -->
+    <section class="hero wireframe-note" data-note="Section 1: Hero - Full viewport height, gradient background">
+        <div class="hero__content container">
+            <span class="hero__badge">Khuyến mãi đặc biệt - Giảm 33%</span>
+
+            <h1 class="hero__title">ENZARA</h1>
+            <p class="hero__subtitle">Nước Rửa Chén Enzyme - An Toàn Cho Gia Đình Bạn</p>
+
+            <div class="hero__price-box">
+                <p class="hero__original-price">Giá gốc: 75.000đ</p>
+                <p class="hero__sale-price">Chỉ còn 50.000đ</p>
+            </div>
+
+            <div class="hero__cta-group">
+                <button class="btn btn--secondary btn--lg">Đặt hàng ngay</button>
+                <button class="btn btn--outline" style="border-color: rgba(255,255,255,0.5); color: white;">Tìm hiểu thêm</button>
+            </div>
+
+            <div class="hero__trust">
+                <span class="hero__trust-item">✓ Miễn phí vận chuyển</span>
+                <span class="hero__trust-item">✓ Thanh toán khi nhận hàng</span>
+                <span class="hero__trust-item">✓ Đổi trả trong 7 ngày</span>
+            </div>
+
+            <div class="hero__image">
+                <div class="hero__image-placeholder">
+                    [Hình ảnh sản phẩm ENZARA]
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         SECTION 2: BENEFITS BAR
+         ======================================== -->
+    <section class="benefits-bar wireframe-note" data-note="Section 2: Benefits Bar - Sticky header with 6 icons">
+        <div class="container">
+            <div class="benefits-bar__grid">
+                <div class="benefits-bar__item">
+                    <div class="benefits-bar__icon">🌿</div>
+                    <span class="benefits-bar__text">100% Thiên nhiên</span>
+                </div>
+                <div class="benefits-bar__item">
+                    <div class="benefits-bar__icon">👶</div>
+                    <span class="benefits-bar__text">An toàn cho bé</span>
+                </div>
+                <div class="benefits-bar__item">
+                    <div class="benefits-bar__icon">🧴</div>
+                    <span class="benefits-bar__text">Không hóa chất độc hại</span>
+                </div>
+                <div class="benefits-bar__item">
+                    <div class="benefits-bar__icon">💧</div>
+                    <span class="benefits-bar__text">Tiết kiệm nước</span>
+                </div>
+                <div class="benefits-bar__item">
+                    <div class="benefits-bar__icon">🌍</div>
+                    <span class="benefits-bar__text">Thân thiện môi trường</span>
+                </div>
+                <div class="benefits-bar__item">
+                    <div class="benefits-bar__icon">✨</div>
+                    <span class="benefits-bar__text">Sạch bóng, không cặn</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         SECTION 3: PAIN POINTS
+         ======================================== -->
+    <section class="pain-points wireframe-note" data-note="Section 3: Pain Points - Problem agitation">
+        <div class="container">
+            <div class="pain-points__header">
+                <h2 class="heading-2 pain-points__title">Bạn có đang gặp những vấn đề này?</h2>
+                <p class="pain-points__subtitle">Những nỗi lo thường gặp khi sử dụng nước rửa chén thông thường</p>
+            </div>
+
+            <div class="pain-points__grid">
+                <div class="pain-point-card">
+                    <div class="pain-point-card__icon">⚠️</div>
+                    <div class="pain-point-card__content">
+                        <h4>Da tay khô ráp, bong tróc</h4>
+                        <p>Hóa chất trong nước rửa chén làm mất độ ẩm tự nhiên của da, gây khô ráp và nứt nẻ.</p>
+                    </div>
+                </div>
+
+                <div class="pain-point-card">
+                    <div class="pain-point-card__icon">⚠️</div>
+                    <div class="pain-point-card__content">
+                        <h4>Lo ngại tồn dư hóa chất trên chén đĩa</h4>
+                        <p>Các chất tẩy rửa công nghiệp có thể để lại tồn dư gây hại cho sức khỏe gia đình.</p>
+                    </div>
+                </div>
+
+                <div class="pain-point-card">
+                    <div class="pain-point-card__icon">⚠️</div>
+                    <div class="pain-point-card__content">
+                        <h4>Mùi hương nhân tạo gây khó chịu</h4>
+                        <p>Mùi hương hóa học quá nồng có thể gây đau đầu, chóng mặt cho người nhạy cảm.</p>
+                    </div>
+                </div>
+
+                <div class="pain-point-card">
+                    <div class="pain-point-card__icon">⚠️</div>
+                    <div class="pain-point-card__content">
+                        <h4>Không an toàn cho trẻ nhỏ</h4>
+                        <p>Trẻ em thường xuyên tiếp xúc với đồ dùng ăn uống, cần đảm bảo an toàn tuyệt đối.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         SECTION 4: AUTHORITY / TRUST BADGES
+         ======================================== -->
+    <section class="authority wireframe-note" data-note="Section 4: Authority - Trust badges and social proof">
+        <div class="container">
+            <div class="authority__header">
+                <h2 class="heading-2">Được tin dùng bởi hàng ngàn gia đình Việt</h2>
+            </div>
+
+            <div class="authority__badges">
+                <div class="authority__badge">
+                    <div class="authority__badge-icon">[Chứng nhận ISO]</div>
+                    <span class="authority__badge-text">Chứng nhận ISO</span>
+                </div>
+                <div class="authority__badge">
+                    <div class="authority__badge-icon">[Bộ Y Tế]</div>
+                    <span class="authority__badge-text">Bộ Y Tế cấp phép</span>
+                </div>
+                <div class="authority__badge">
+                    <div class="authority__badge-icon">[Organic]</div>
+                    <span class="authority__badge-text">Chứng nhận Organic</span>
+                </div>
+                <div class="authority__badge">
+                    <div class="authority__badge-icon">[Eco-Friendly]</div>
+                    <span class="authority__badge-text">Thân thiện môi trường</span>
+                </div>
+            </div>
+
+            <div class="authority__stats">
+                <div class="authority__stat">
+                    <div class="authority__stat-number">10.000+</div>
+                    <div class="authority__stat-label">Khách hàng hài lòng</div>
+                </div>
+                <div class="authority__stat">
+                    <div class="authority__stat-number">4.9/5</div>
+                    <div class="authority__stat-label">Đánh giá trung bình</div>
+                </div>
+                <div class="authority__stat">
+                    <div class="authority__stat-number">98%</div>
+                    <div class="authority__stat-label">Tỷ lệ mua lại</div>
+                </div>
+                <div class="authority__stat">
+                    <div class="authority__stat-number">5 năm</div>
+                    <div class="authority__stat-label">Kinh nghiệm</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         SECTION 5: BEFORE/AFTER STORY
+         ======================================== -->
+    <section class="before-after wireframe-note" data-note="Section 5: Before/After - Transformation story">
+        <div class="container">
+            <div class="before-after__header">
+                <h2 class="heading-2">Sự khác biệt khi dùng ENZARA</h2>
+            </div>
+
+            <div class="before-after__comparison">
+                <div class="before-after__panel before-after__panel--before">
+                    <div class="before-after__panel-header">
+                        <span class="before-after__panel-badge">Trước đây</span>
+                    </div>
+                    <ul class="before-after__list">
+                        <li class="before-after__list-item">
+                            <span class="before-after__list-icon">✗</span>
+                            <span>Da tay khô ráp, bong tróc</span>
+                        </li>
+                        <li class="before-after__list-item">
+                            <span class="before-after__list-icon">✗</span>
+                            <span>Lo lắng về hóa chất tồn dư</span>
+                        </li>
+                        <li class="before-after__list-item">
+                            <span class="before-after__list-icon">✗</span>
+                            <span>Mùi hương nhân tạo khó chịu</span>
+                        </li>
+                        <li class="before-after__list-item">
+                            <span class="before-after__list-icon">✗</span>
+                            <span>Tốn nhiều nước xả</span>
+                        </li>
+                        <li class="before-after__list-item">
+                            <span class="before-after__list-icon">✗</span>
+                            <span>Không an toàn cho bé</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="before-after__arrow">→</div>
+
+                <div class="before-after__panel before-after__panel--after">
+                    <div class="before-after__panel-header">
+                        <span class="before-after__panel-badge">Với ENZARA</span>
+                    </div>
+                    <ul class="before-after__list">
+                        <li class="before-after__list-item">
+                            <span class="before-after__list-icon">✓</span>
+                            <span>Da tay mềm mại, được bảo vệ</span>
+                        </li>
+                        <li class="before-after__list-item">
+                            <span class="before-after__list-icon">✓</span>
+                            <span>100% an toàn, không tồn dư</span>
+                        </li>
+                        <li class="before-after__list-item">
+                            <span class="before-after__list-icon">✓</span>
+                            <span>Hương thảo mộc dịu nhẹ</span>
+                        </li>
+                        <li class="before-after__list-item">
+                            <span class="before-after__list-icon">✓</span>
+                            <span>Tiết kiệm 50% nước xả</span>
+                        </li>
+                        <li class="before-after__list-item">
+                            <span class="before-after__list-icon">✓</span>
+                            <span>An toàn tuyệt đối cho gia đình</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         SECTION 6: BENEFITS GRID
+         ======================================== -->
+    <section class="benefits-grid wireframe-note" data-note="Section 6: Benefits Grid - 6 benefit cards">
+        <div class="container">
+            <div class="benefits-grid__header">
+                <h2 class="heading-2">6 Lý do chọn ENZARA</h2>
+                <p class="text-muted">Công nghệ enzyme tiên tiến mang đến trải nghiệm rửa chén hoàn hảo</p>
+            </div>
+
+            <div class="benefits-grid__cards">
+                <div class="benefit-card">
+                    <div class="benefit-card__icon">🧬</div>
+                    <h4 class="benefit-card__title heading-4">Công nghệ Enzyme</h4>
+                    <p class="benefit-card__desc">Enzyme tự nhiên phân hủy dầu mỡ nhanh chóng mà không cần hóa chất độc hại</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-card__icon">🌿</div>
+                    <h4 class="benefit-card__title heading-4">100% Thành phần thiên nhiên</h4>
+                    <p class="benefit-card__desc">Chiết xuất từ các loại thảo mộc tự nhiên, an toàn cho mọi thành viên</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-card__icon">🤲</div>
+                    <h4 class="benefit-card__title heading-4">Dưỡng ẩm cho da tay</h4>
+                    <p class="benefit-card__desc">Bổ sung độ ẩm, giữ cho da tay mềm mại ngay cả khi rửa nhiều</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-card__icon">💨</div>
+                    <h4 class="benefit-card__title heading-4">Xả sạch nhanh chóng</h4>
+                    <p class="benefit-card__desc">Không để lại bọt và tồn dư, tiết kiệm đến 50% lượng nước xả</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-card__icon">🍃</div>
+                    <h4 class="benefit-card__title heading-4">Hương thơm tự nhiên</h4>
+                    <p class="benefit-card__desc">Tinh dầu chanh sả dịu nhẹ, mang lại cảm giác thư giãn khi sử dụng</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-card__icon">♻️</div>
+                    <h4 class="benefit-card__title heading-4">Thân thiện môi trường</h4>
+                    <p class="benefit-card__desc">Phân hủy sinh học 100%, không gây ô nhiễm nguồn nước</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         SECTION 7: VALUE STACK
+         ======================================== -->
+    <section class="value-stack wireframe-note" data-note="Section 7: Value Stack - Total value breakdown">
+        <div class="container">
+            <div class="value-stack__header">
+                <h2 class="heading-2">Giá trị bạn nhận được</h2>
+            </div>
+
+            <div class="value-stack__items">
+                <div class="value-stack__item">
+                    <span class="value-stack__item-name">Nước rửa chén ENZARA 500ml</span>
+                    <span class="value-stack__item-value">75.000đ</span>
+                </div>
+                <div class="value-stack__item">
+                    <span class="value-stack__item-name">Quà tặng: Bọt biển rửa chén</span>
+                    <span class="value-stack__item-value">12.000đ</span>
+                </div>
+                <div class="value-stack__item">
+                    <span class="value-stack__item-name">Hướng dẫn sử dụng tiết kiệm</span>
+                    <span class="value-stack__item-value">Miễn phí</span>
+                </div>
+                <div class="value-stack__item">
+                    <span class="value-stack__item-name">Tư vấn chăm sóc khách hàng 24/7</span>
+                    <span class="value-stack__item-value">Miễn phí</span>
+                </div>
+            </div>
+
+            <div class="value-stack__total">
+                <p class="value-stack__total-label">Tổng giá trị</p>
+                <p class="value-stack__total-value">87.000đ</p>
+                <p class="value-stack__savings">Bạn chỉ trả 50.000đ - Tiết kiệm 37.000đ!</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         SECTION 8: FAQ ACCORDION
+         ======================================== -->
+    <section class="faq wireframe-note" data-note="Section 8: FAQ - Accordion style">
+        <div class="container">
+            <div class="faq__header">
+                <h2 class="heading-2">Câu hỏi thường gặp</h2>
+            </div>
+
+            <div class="faq__list">
+                <div class="faq__item active">
+                    <button class="faq__question">
+                        ENZARA có thực sự an toàn cho da tay không?
+                        <span class="faq__question-icon">+</span>
+                    </button>
+                    <div class="faq__answer">
+                        <div class="faq__answer-content">
+                            Hoàn toàn an toàn! ENZARA được sản xuất từ 100% thành phần thiên nhiên, không chứa các hóa chất độc hại như SLS, Paraben hay chất tạo màu công nghiệp. Sản phẩm đã được kiểm nghiệm và chứng nhận bởi Bộ Y Tế Việt Nam.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq__item">
+                    <button class="faq__question">
+                        Sản phẩm có hiệu quả với dầu mỡ cứng đầu không?
+                        <span class="faq__question-icon">+</span>
+                    </button>
+                    <div class="faq__answer">
+                        <div class="faq__answer-content">
+                            Công nghệ enzyme trong ENZARA được thiết kế đặc biệt để phân hủy dầu mỡ một cách tự nhiên. Enzyme hoạt động mạnh mẽ trên các vết bẩn cứng đầu mà không cần dùng đến hóa chất mạnh.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq__item">
+                    <button class="faq__question">
+                        Thời gian giao hàng là bao lâu?
+                        <span class="faq__question-icon">+</span>
+                    </button>
+                    <div class="faq__answer">
+                        <div class="faq__answer-content">
+                            Đơn hàng sẽ được giao trong vòng 2-3 ngày làm việc đối với khu vực nội thành và 3-5 ngày với các tỉnh thành khác. Miễn phí vận chuyển khi mua từ 2 sản phẩm.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq__item">
+                    <button class="faq__question">
+                        Có chính sách đổi trả không?
+                        <span class="faq__question-icon">+</span>
+                    </button>
+                    <div class="faq__answer">
+                        <div class="faq__answer-content">
+                            Chúng tôi cam kết đổi trả trong vòng 7 ngày nếu sản phẩm bị lỗi hoặc không đúng mô tả. Nếu bạn không hài lòng vì bất kỳ lý do gì, hãy liên hệ hotline 0945.139.990 để được hỗ trợ.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq__item">
+                    <button class="faq__question">
+                        ENZARA có thể dùng để rửa rau củ không?
+                        <span class="faq__question-icon">+</span>
+                    </button>
+                    <div class="faq__answer">
+                        <div class="faq__answer-content">
+                            ENZARA được thiết kế chuyên dụng để rửa chén đĩa. Mặc dù thành phần an toàn, chúng tôi khuyên bạn nên sử dụng sản phẩm chuyên dụng để rửa rau củ quả.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         SECTION 9: WHY THIS PRICE
+         ======================================== -->
+    <section class="why-price wireframe-note" data-note="Section 9: Why This Price - Price justification">
+        <div class="container">
+            <div class="why-price__header">
+                <h2 class="heading-2">Tại sao giá ưu đãi này?</h2>
+            </div>
+
+            <div class="why-price__content">
+                <div class="why-price__reasons">
+                    <div class="why-price__reason">
+                        <div class="why-price__reason-number">1</div>
+                        <div class="why-price__reason-content">
+                            <h4>Ra mắt sản phẩm mới</h4>
+                            <p>Để tri ân khách hàng đầu tiên trải nghiệm ENZARA, chúng tôi áp dụng mức giá đặc biệt chỉ trong thời gian giới hạn.</p>
+                        </div>
+                    </div>
+
+                    <div class="why-price__reason">
+                        <div class="why-price__reason-number">2</div>
+                        <div class="why-price__reason-content">
+                            <h4>Bán trực tiếp, không qua trung gian</h4>
+                            <p>Chúng tôi cắt bỏ các chi phí trung gian để mang đến sản phẩm chất lượng với giá tốt nhất cho bạn.</p>
+                        </div>
+                    </div>
+
+                    <div class="why-price__reason">
+                        <div class="why-price__reason-number">3</div>
+                        <div class="why-price__reason-content">
+                            <h4>Xây dựng cộng đồng khách hàng</h4>
+                            <p>Mục tiêu của chúng tôi là tạo dựng cộng đồng khách hàng trung thành, vì vậy ưu tiên trải nghiệm hơn lợi nhuận.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         SECTION 10: PRICE COMPARISON TABLE
+         ======================================== -->
+    <section class="price-comparison wireframe-note" data-note="Section 10: Price Comparison - Competitor comparison">
+        <div class="container">
+            <div class="price-comparison__header">
+                <h2 class="heading-2">So sánh với các sản phẩm khác</h2>
+            </div>
+
+            <div class="price-comparison__table-wrapper">
+                <table class="price-comparison__table">
+                    <thead>
+                        <tr>
+                            <th>Tiêu chí</th>
+                            <th>Sản phẩm thường</th>
+                            <th>ENZARA</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Thành phần</td>
+                            <td>Hóa chất công nghiệp</td>
+                            <td>100% thiên nhiên <span class="price-comparison__badge">Tốt hơn</span></td>
+                        </tr>
+                        <tr class="price-comparison__highlight">
+                            <td>An toàn cho da</td>
+                            <td>Gây khô, kích ứng</td>
+                            <td>Dưỡng ẩm, bảo vệ da</td>
+                        </tr>
+                        <tr>
+                            <td>Tồn dư hóa chất</td>
+                            <td>Có thể có</td>
+                            <td>Không có</td>
+                        </tr>
+                        <tr class="price-comparison__highlight">
+                            <td>Thân thiện môi trường</td>
+                            <td>Không</td>
+                            <td>Phân hủy sinh học 100%</td>
+                        </tr>
+                        <tr>
+                            <td>Hiệu quả tẩy dầu mỡ</td>
+                            <td>Tốt</td>
+                            <td>Rất tốt</td>
+                        </tr>
+                        <tr class="price-comparison__highlight">
+                            <td>Giá</td>
+                            <td>40.000đ - 60.000đ</td>
+                            <td><strong>50.000đ</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         SECTION 11: ORIGINAL PRICE DISPLAY
+         ======================================== -->
+    <section class="original-price wireframe-note" data-note="Section 11: Original Price - Price anchor">
+        <div class="container">
+            <div class="original-price__content">
+                <p class="original-price__label">Giá bán lẻ thông thường</p>
+                <p class="original-price__value">75.000đ</p>
+
+                <div class="original-price__arrow">↓</div>
+
+                <p class="original-price__sale-label">Giá ưu đãi hôm nay</p>
+                <p class="original-price__sale-value">50.000đ</p>
+
+                <span class="original-price__savings-badge">Tiết kiệm 25.000đ (33%)</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         SECTION 12: BONUS GIFT SHOWCASE
+         ======================================== -->
+    <section class="bonus-gift wireframe-note" data-note="Section 12: Bonus Gift - Free gift highlight">
+        <div class="container">
+            <div class="bonus-gift__header">
+                <h2 class="heading-2">Quà tặng đặc biệt</h2>
+                <p>Đặt hàng ngay hôm nay để nhận thêm</p>
+            </div>
+
+            <div class="bonus-gift__card">
+                <span class="bonus-gift__badge">Miễn phí</span>
+
+                <div class="bonus-gift__image">
+                    [Hình bọt biển rửa chén]
+                </div>
+
+                <h3 class="bonus-gift__title heading-3">Bọt biển rửa chén cao cấp</h3>
+                <p class="bonus-gift__desc">Bọt biển 2 mặt kháng khuẩn, không trầy xước, bền bỉ theo thời gian</p>
+
+                <p class="bonus-gift__value-label">Trị giá</p>
+                <p class="bonus-gift__value">12.000đ</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         SECTION 13: TESTIMONIALS
+         ======================================== -->
+    <section class="testimonials wireframe-note" data-note="Section 13: Testimonials - 3 customer reviews">
+        <div class="container">
+            <div class="testimonials__header">
+                <h2 class="heading-2">Khách hàng nói gì về ENZARA</h2>
+            </div>
+
+            <div class="testimonials__grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-card__header">
+                        <div class="testimonial-card__avatar">[Avatar]</div>
+                        <div class="testimonial-card__info">
+                            <h4>Chị Nguyễn Thị Lan</h4>
+                            <p>Nội trợ, Hà Nội</p>
+                        </div>
+                    </div>
+                    <div class="testimonial-card__rating">⭐⭐⭐⭐⭐</div>
+                    <p class="testimonial-card__content">
+                        "Dùng ENZARA được 2 tuần, da tay mình không còn bị khô ráp như trước nữa. Rửa xong chén đĩa sáng bóng, không còn cảm giác nhờn dầu."
+                    </p>
+                </div>
+
+                <div class="testimonial-card">
+                    <div class="testimonial-card__header">
+                        <div class="testimonial-card__avatar">[Avatar]</div>
+                        <div class="testimonial-card__info">
+                            <h4>Anh Trần Văn Minh</h4>
+                            <p>Chủ quán ăn, TP.HCM</p>
+                        </div>
+                    </div>
+                    <div class="testimonial-card__rating">⭐⭐⭐⭐⭐</div>
+                    <p class="testimonial-card__content">
+                        "Quán mình rửa rất nhiều chén đĩa mỗi ngày. Từ khi chuyển sang ENZARA, nhân viên không còn phàn nàn về việc da tay bị ảnh hưởng nữa."
+                    </p>
+                </div>
+
+                <div class="testimonial-card">
+                    <div class="testimonial-card__header">
+                        <div class="testimonial-card__avatar">[Avatar]</div>
+                        <div class="testimonial-card__info">
+                            <h4>Chị Lê Thị Hương</h4>
+                            <p>Bà mẹ 2 con, Đà Nẵng</p>
+                        </div>
+                    </div>
+                    <div class="testimonial-card__rating">⭐⭐⭐⭐⭐</div>
+                    <p class="testimonial-card__content">
+                        "Yên tâm nhất là sản phẩm an toàn cho con nhỏ. Mùi hương dịu nhẹ, không gây khó chịu. Sẽ tiếp tục ủng hộ ENZARA!"
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         SECTION 14: SCARCITY COUNTDOWN
+         ======================================== -->
+    <section class="scarcity wireframe-note" data-note="Section 14: Scarcity - Countdown timer and stock warning">
+        <div class="container">
+            <div class="scarcity__content">
+                <span class="scarcity__badge">Ưu đãi có hạn</span>
+
+                <h2 class="heading-2 scarcity__title">Khuyến mãi kết thúc sau</h2>
+
+                <div class="scarcity__countdown">
+                    <div class="scarcity__countdown-item">
+                        <div class="scarcity__countdown-number" id="hours">23</div>
+                        <div class="scarcity__countdown-label">Giờ</div>
+                    </div>
+                    <div class="scarcity__countdown-item">
+                        <div class="scarcity__countdown-number" id="minutes">45</div>
+                        <div class="scarcity__countdown-label">Phút</div>
+                    </div>
+                    <div class="scarcity__countdown-item">
+                        <div class="scarcity__countdown-number" id="seconds">30</div>
+                        <div class="scarcity__countdown-label">Giây</div>
+                    </div>
+                </div>
+
+                <p class="scarcity__stock">
+                    Chỉ còn <span class="scarcity__stock-number">47</span> sản phẩm trong kho!
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         SECTION 15: FINAL PRICE SUMMARY
+         ======================================== -->
+    <section class="final-price wireframe-note" data-note="Section 15: Final Price - Order summary">
+        <div class="container">
+            <div class="final-price__content">
+                <h2 class="heading-2">Tóm tắt đơn hàng</h2>
+
+                <div class="final-price__summary">
+                    <div class="final-price__item">
+                        <span>Nước rửa chén ENZARA 500ml</span>
+                        <span>75.000đ</span>
+                    </div>
+                    <div class="final-price__item">
+                        <span>Giảm giá khuyến mãi</span>
+                        <span style="color: #4CAF50;">-25.000đ</span>
+                    </div>
+                    <div class="final-price__item">
+                        <span>Quà tặng: Bọt biển rửa chén</span>
+                        <span style="color: #4CAF50;">Miễn phí</span>
+                    </div>
+                    <div class="final-price__item final-price__item--total">
+                        <span>Tổng thanh toán</span>
+                        <span class="final-price__value">50.000đ</span>
+                    </div>
+                </div>
+
+                <div class="final-price__free-ship">
+                    <span>🚚</span>
+                    <span>Miễn phí vận chuyển khi mua từ 2 sản phẩm</span>
+                </div>
+
+                <div class="final-price__guarantee">
+                    <span class="final-price__guarantee-item">✓ Thanh toán khi nhận hàng</span>
+                    <span class="final-price__guarantee-item">✓ Đổi trả trong 7 ngày</span>
+                    <span class="final-price__guarantee-item">✓ Hỗ trợ 24/7</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         SECTION 16: ORDER FORM
+         ======================================== -->
+    <section class="order-form wireframe-note" data-note="Section 16: Order Form - Lead capture">
+        <div class="container">
+            <div class="order-form__header">
+                <h2 class="heading-2">Đặt hàng ngay</h2>
+                <p class="text-muted">Điền thông tin để nhận hàng và quà tặng</p>
+            </div>
+
+            <div class="order-form__container">
+                <form class="order-form__form">
+                    <div class="order-form__group">
+                        <label class="order-form__label" for="fullname">Họ và tên *</label>
+                        <input type="text" id="fullname" class="order-form__input" placeholder="Nhập họ và tên của bạn" required>
+                    </div>
+
+                    <div class="order-form__group">
+                        <label class="order-form__label" for="phone">Số điện thoại *</label>
+                        <input type="tel" id="phone" class="order-form__input" placeholder="Nhập số điện thoại" required>
+                    </div>
+
+                    <div class="order-form__group">
+                        <label class="order-form__label" for="address">Địa chỉ nhận hàng *</label>
+                        <input type="text" id="address" class="order-form__input" placeholder="Số nhà, đường, phường/xã" required>
+                    </div>
+
+                    <div class="order-form__group">
+                        <label class="order-form__label" for="city">Tỉnh/Thành phố *</label>
+                        <select id="city" class="order-form__select" required>
+                            <option value="">Chọn tỉnh/thành phố</option>
+                            <option value="hanoi">Hà Nội</option>
+                            <option value="hcm">TP. Hồ Chí Minh</option>
+                            <option value="danang">Đà Nẵng</option>
+                            <option value="other">Tỉnh/thành khác</option>
+                        </select>
+                    </div>
+
+                    <div class="order-form__group">
+                        <label class="order-form__label">Số lượng</label>
+                        <div class="order-form__quantity">
+                            <button type="button" class="order-form__quantity-btn" onclick="decreaseQty()">−</button>
+                            <input type="number" id="quantity" class="order-form__quantity-input" value="1" min="1" max="10">
+                            <button type="button" class="order-form__quantity-btn" onclick="increaseQty()">+</button>
+                        </div>
+                        <p class="body-sm text-muted" style="margin-top: 0.5rem;">Mua từ 2 sản phẩm được miễn phí ship!</p>
+                    </div>
+
+                    <button type="submit" class="order-form__submit">
+                        Đặt hàng ngay - 50.000đ
+                    </button>
+
+                    <p class="order-form__note">
+                        Thanh toán khi nhận hàng (COD). Đổi trả miễn phí trong 7 ngày.
+                    </p>
+                </form>
+
+                <div class="order-form__contact">
+                    <p class="order-form__contact-item">
+                        <span>🌐</span>
+                        <a href="https://enzara.vn" target="_blank">enzara.vn</a>
+                    </p>
+                    <p class="order-form__contact-item">
+                        <span>📞</span>
+                        <a href="tel:0945139990">Hotline: 0945.139.990</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         FOOTER
+         ======================================== -->
+    <footer class="footer">
+        <div class="container">
+            <p class="footer__content">
+                © 2024 ENZARA. Nước rửa chén enzyme thiên nhiên.<br>
+                Website: enzara.vn | Hotline: 0945.139.990
+            </p>
+        </div>
+    </footer>
+
+    <!-- ========================================
+         JAVASCRIPT
+         ======================================== -->
+    <script>
+        // FAQ Accordion
+        document.querySelectorAll('.faq__question').forEach(button => {
+            button.addEventListener('click', () => {
+                const faqItem = button.parentElement;
+                const isActive = faqItem.classList.contains('active');
+
+                // Close all FAQ items
+                document.querySelectorAll('.faq__item').forEach(item => {
+                    item.classList.remove('active');
+                });
+
+                // Open clicked item if it wasn't active
+                if (!isActive) {
+                    faqItem.classList.add('active');
+                }
+            });
+        });
+
+        // Quantity controls
+        function decreaseQty() {
+            const input = document.getElementById('quantity');
+            if (input.value > 1) {
+                input.value = parseInt(input.value) - 1;
+                updatePrice();
+            }
+        }
+
+        function increaseQty() {
+            const input = document.getElementById('quantity');
+            if (input.value < 10) {
+                input.value = parseInt(input.value) + 1;
+                updatePrice();
+            }
+        }
+
+        function updatePrice() {
+            const qty = parseInt(document.getElementById('quantity').value);
+            const price = qty * 50000;
+            const formattedPrice = new Intl.NumberFormat('vi-VN').format(price);
+            document.querySelector('.order-form__submit').textContent = `Đặt hàng ngay - ${formattedPrice}đ`;
+        }
+
+        // Countdown Timer
+        function startCountdown() {
+            // Set countdown to 24 hours from now
+            let totalSeconds = 24 * 60 * 60;
+
+            function updateCountdown() {
+                const hours = Math.floor(totalSeconds / 3600);
+                const minutes = Math.floor((totalSeconds % 3600) / 60);
+                const seconds = totalSeconds % 60;
+
+                document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+                document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+                document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+
+                if (totalSeconds > 0) {
+                    totalSeconds--;
+                    setTimeout(updateCountdown, 1000);
+                }
+            }
+
+            updateCountdown();
+        }
+
+        // Initialize countdown on page load
+        startCountdown();
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Form submission handling
+        document.querySelector('.order-form__form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Collect form data
+            const formData = {
+                fullname: document.getElementById('fullname').value,
+                phone: document.getElementById('phone').value,
+                address: document.getElementById('address').value,
+                city: document.getElementById('city').value,
+                quantity: document.getElementById('quantity').value
+            };
+
+            // In production, this would send data to a server
+            console.log('Order submitted:', formData);
+            alert('Cảm ơn bạn đã đặt hàng! Chúng tôi sẽ liên hệ xác nhận trong thời gian sớm nhất.');
+        });
+
+        // Debug grid toggle (Press 'G' to toggle)
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'g' || e.key === 'G') {
+                let grid = document.querySelector('.debug-grid');
+                if (!grid) {
+                    grid = document.createElement('div');
+                    grid.className = 'debug-grid';
+                    document.body.appendChild(grid);
+                }
+                grid.classList.toggle('active');
+            }
+        });
+    </script>
+</body>
+</html>
