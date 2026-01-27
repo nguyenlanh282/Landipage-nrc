@@ -1,0 +1,59 @@
+/* ENZARA - SVG Icons as CSS */
+
+/* Icon base styles */
+.icon-svg {
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.icon-svg svg {
+  width: 100%;
+  height: 100%;
+}
+
+.icon-svg--sm { width: 20px; height: 20px; }
+.icon-svg--md { width: 32px; height: 32px; }
+.icon-svg--lg { width: 48px; height: 48px; }
+.icon-svg--xl { width: 56px; height: 56px; }
+
+/* Icon colors */
+.icon-svg--green { color: var(--color-leaf-green); }
+.icon-svg--orange { color: var(--color-sunset-orange); }
+.icon-svg--gold { color: var(--color-pineapple-gold); }
+.icon-svg--white { color: var(--color-white); }
+.icon-svg--success { color: var(--color-success); }
+.icon-svg--error { color: var(--color-error); }
+
+/* Clickable elements */
+.clickable {
+  cursor: pointer;
+  transition: transform var(--duration-fast) var(--ease-out),
+              box-shadow var(--duration-fast) var(--ease-out);
+}
+
+.clickable:hover {
+  transform: translateY(-2px);
+}
+
+.clickable:active {
+  transform: translateY(0);
+}
+
+/* Enhanced focus states */
+.focus-ring:focus-visible {
+  outline: 3px solid var(--color-spring-green);
+  outline-offset: 3px;
+}
+
+/* Touch targets - ensure minimum 44x44px */
+.touch-target {
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
