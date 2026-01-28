@@ -25,11 +25,40 @@
   };
 
   // ========================================
+  // SEPAY CONFIGURATION
+  // ========================================
+
+  const SEPAY_CONFIG = {
+    accountNumber: '080838689999',
+    bankCode: 'mbbank',
+    accountName: 'ENZARA VIET NAM',
+    qrApiUrl: 'https://qr.sepay.vn/img'
+  };
+
+  // ========================================
   // API HELPERS
   // ========================================
 
   function buildApiUrl(endpoint) {
     return `${PANCAKE_CONFIG.baseUrl}/shops/${PANCAKE_CONFIG.shopId}${endpoint}?api_key=${PANCAKE_CONFIG.apiKey}`;
+  }
+
+  // Generate unique order code for bank transfer
+  function generateOrderCode() {
+    const timestamp = Date.now();
+    const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+    return `ENZARA${timestamp}${random}`;
+  }
+
+  // Build SePay QR code URL
+  function buildQRUrl(amount, orderCode) {
+    const params = new URLSearchParams({
+      acc: SEPAY_CONFIG.accountNumber,
+      bank: SEPAY_CONFIG.bankCode,
+      amount: amount.toString(),
+      des: orderCode
+    });
+    return `${SEPAY_CONFIG.qrApiUrl}?${params.toString()}`;
   }
 
   async function createPancakeOrder(orderData) {
@@ -45,6 +74,10 @@
     const shippingFee = orderData.quantity >= 2 ? 0 : 30000;
     const itemTotal = orderData.quantity * PANCAKE_CONFIG.product.salePrice;
     const total = itemTotal + shippingFee;
+
+    // Generate order code for bank transfer
+    const orderCode = orderData.paymentMethod === 'bank_transfer' ? generateOrderCode() : null;
+    const paymentMethodLabel = orderData.paymentMethod === 'bank_transfer' ? 'Chuyen khoan' : 'COD';
 
     // Prepare order payload for Pancake POS
     const payload = {
@@ -71,11 +104,11 @@
       warehouse_id: PANCAKE_CONFIG.warehouseId,
 
       // Payment and shipping
-      payment_method: 'cod', // Cash on delivery
+      payment_method: orderData.paymentMethod === 'bank_transfer' ? 'bank_transfer' : 'cod',
       shipping_fee: shippingFee,
 
-      // Note with landing page info
-      note: `[Landing Page] Don hang tu ENZARA Landing Page - SL: ${orderData.quantity} chai`
+      // Note with landing page info and order code
+      note: `[Landing Page] ${paymentMethodLabel} - SL: ${orderData.quantity} chai${orderCode ? ' - Ma CK: ' + orderCode : ''}`
     };
 
     try {
@@ -96,6 +129,9 @@
           orderNumber: result.data?.display_id || result.data?.id,
           trackingLink: result.data?.tracking_link,
           orderLink: result.data?.order_link,
+          orderCode: orderCode,
+          total: total,
+          paymentMethod: orderData.paymentMethod,
           data: result.data
         };
       } else {
@@ -126,6 +162,112 @@
 
     // Override form submit
     form.addEventListener('submit', handlePancakeSubmit, true);
+
+    // Initialize payment method selector
+    initPaymentMethodSelector();
+  }
+
+  // ========================================
+  // PAYMENT METHOD SELECTOR
+  // ========================================
+
+  function initPaymentMethodSelector() {
+    const radios = document.querySelectorAll('input[name="payment_method"]');
+    const submitBtnText = document.querySelector('#submit-btn-text');
+
+    radios.forEach(radio => {
+      radio.addEventListener('change', function() {
+        // Update visual selection
+        document.querySelectorAll('.payment-method-option').forEach(opt => {
+          opt.classList.remove('payment-method-option--selected');
+        });
+        this.closest('.payment-method-option').classList.add('payment-method-option--selected');
+
+        // Update submit button text
+        if (submitBtnText) {
+          if (this.value === 'bank_transfer') {
+            submitBtnText.textContent = 'Đặt Hàng - Chuyển Khoản';
+          } else {
+            submitBtnText.textContent = 'Đặt Hàng - Thanh Toán Khi Nhận';
+          }
+        }
+      });
+    });
+  }
+
+  // ========================================
+  // QR MODAL FUNCTIONS
+  // ========================================
+
+  function showQRModal(orderData, result) {
+    const modal = document.querySelector('#qr-modal');
+    if (!modal) return;
+
+    // Set QR image
+    const qrImage = modal.querySelector('#qr-image');
+    const qrUrl = buildQRUrl(result.total, result.orderCode);
+    qrImage.src = qrUrl;
+
+    // Set order info
+    modal.querySelector('#qr-order-code').textContent = result.orderCode;
+    modal.querySelector('#qr-amount').textContent = formatCurrency(result.total);
+    modal.querySelector('#qr-transfer-content').textContent = result.orderCode;
+
+    // Show modal
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+
+    // Setup close handlers
+    const closeBtn = modal.querySelector('.qr-modal__close');
+    const backdrop = modal.querySelector('.qr-modal__backdrop');
+    const doneBtn = modal.querySelector('#qr-done-btn');
+
+    const closeModal = () => {
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+      // Show success message after closing
+      showBankTransferSuccess(orderData, result);
+    };
+
+    closeBtn.onclick = closeModal;
+    backdrop.onclick = closeModal;
+    doneBtn.onclick = closeModal;
+
+    // ESC key to close
+    const escHandler = (e) => {
+      if (e.key === 'Escape') {
+        closeModal();
+        document.removeEventListener('keydown', escHandler);
+      }
+    };
+    document.addEventListener('keydown', escHandler);
+  }
+
+  function showBankTransferSuccess(orderData, result) {
+    const successHTML = `
+      <div class="order-success" style="text-align: center; padding: var(--space-8);">
+        <div style="font-size: 64px; margin-bottom: var(--space-4);">✅</div>
+        <h3 style="color: var(--color-forest-green); margin-bottom: var(--space-4);">Đơn hàng đã được ghi nhận!</h3>
+        ${result.orderNumber ? `<p style="margin-bottom: var(--space-2); font-size: 14px; color: #666;">Mã đơn hàng: <strong>#${result.orderNumber}</strong></p>` : ''}
+        <p style="margin-bottom: var(--space-2);">Cảm ơn <strong>${orderData.name}</strong> đã đặt hàng.</p>
+        <p style="margin-bottom: var(--space-4);">Mã chuyển khoản: <strong style="color: var(--color-sunset-orange);">${result.orderCode}</strong></p>
+        <p style="font-size: var(--text-h3); font-weight: 700; color: var(--color-forest-green);">
+          Số tiền: ${formatCurrency(result.total)}
+        </p>
+        <div style="margin-top: var(--space-6); padding: var(--space-4); background: var(--color-cream-yellow); border-radius: var(--radius-md);">
+          <p style="font-size: 14px;">
+            <strong>Lưu ý:</strong> Đơn hàng sẽ được xử lý sau khi chúng tôi nhận được thanh toán.<br>
+            Chúng tôi sẽ liên hệ qua số <strong>${orderData.phone}</strong> để xác nhận.
+          </p>
+        </div>
+      </div>
+    `;
+
+    const form = document.querySelector('#order-form');
+    if (form) {
+      form.innerHTML = successHTML;
+      form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
   }
 
   async function handlePancakeSubmit(e) {
@@ -152,6 +294,9 @@
     const quantityEl = form.querySelector('.quantity-selector__value');
     const quantity = parseInt(quantityEl?.value || quantityEl?.textContent) || 1;
 
+    // Get payment method
+    const paymentMethod = form.querySelector('input[name="payment_method"]:checked')?.value || 'cod';
+
     // Prepare order data
     const orderData = {
       name: formData.get('name')?.trim(),
@@ -159,7 +304,8 @@
       address: formData.get('address')?.trim(),
       district: formData.get('district')?.trim(),
       city: formData.get('city')?.trim(),
-      quantity: quantity
+      quantity: quantity,
+      paymentMethod: paymentMethod
     };
 
     // Show loading state
@@ -185,11 +331,19 @@
     const result = await createPancakeOrder(orderData);
 
     if (result.success) {
-      // Success - show confirmation
-      showOrderSuccess(orderData, result);
-
       // Track conversion (if analytics available)
       trackConversion(orderData, result);
+
+      // Handle based on payment method
+      if (result.paymentMethod === 'bank_transfer') {
+        // Show QR modal for bank transfer
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnText;
+        showQRModal(orderData, result);
+      } else {
+        // COD - show regular success confirmation
+        showOrderSuccess(orderData, result);
+      }
     } else {
       // Error - restore button and show error
       submitBtn.disabled = false;

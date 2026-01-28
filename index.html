@@ -948,9 +948,43 @@
             </div>
           </div>
 
-          <button type="submit" class="btn btn-primary btn-lg order-form__submit focus-ring touch-target">
+          <!-- Payment Method Selector -->
+          <div class="order-form__payment-method">
+            <span class="order-form__payment-label">Phương thức thanh toán:</span>
+            <div class="payment-method-selector">
+              <label class="payment-method-option payment-method-option--selected">
+                <input type="radio" name="payment_method" value="cod" checked>
+                <span class="payment-method-option__icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                    <line x1="1" y1="10" x2="23" y2="10"></line>
+                  </svg>
+                </span>
+                <span class="payment-method-option__content">
+                  <span class="payment-method-option__title">Thanh toán khi nhận hàng (COD)</span>
+                  <span class="payment-method-option__desc">Trả tiền mặt khi nhận hàng</span>
+                </span>
+              </label>
+              <label class="payment-method-option">
+                <input type="radio" name="payment_method" value="bank_transfer">
+                <span class="payment-method-option__icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                    <path d="M7 7h10v10H7z" stroke-dasharray="2 2"></path>
+                    <circle cx="12" cy="12" r="2"></circle>
+                  </svg>
+                </span>
+                <span class="payment-method-option__content">
+                  <span class="payment-method-option__title">Chuyển khoản ngân hàng</span>
+                  <span class="payment-method-option__desc">Quét mã QR để thanh toán</span>
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-lg order-form__submit focus-ring touch-target" id="submit-btn">
             <svg class="icon-svg--sm" style="display: inline; vertical-align: middle; margin-right: 8px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path></svg>
-            Đặt Hàng - Thanh Toán Khi Nhận
+            <span id="submit-btn-text">Đặt Hàng - Thanh Toán Khi Nhận</span>
           </button>
         </form>
 
@@ -1029,6 +1063,36 @@
       <p class="footer__copyright">© 2026 ENZARA. Nước Rửa Chén Enzyme Sinh Học.</p>
     </div>
   </footer>
+
+  <!-- QR Payment Modal -->
+  <div class="qr-modal" id="qr-modal" role="dialog" aria-modal="true" aria-labelledby="qr-modal-title">
+    <div class="qr-modal__backdrop"></div>
+    <div class="qr-modal__content">
+      <button type="button" class="qr-modal__close" aria-label="Đóng">&times;</button>
+      <h3 class="qr-modal__title" id="qr-modal-title">Quét mã QR để thanh toán</h3>
+      <div class="qr-modal__order-info">
+        <p>Mã đơn hàng: <strong id="qr-order-code"></strong></p>
+        <p>Số tiền: <strong id="qr-amount"></strong></p>
+      </div>
+      <div class="qr-modal__qr-container">
+        <img id="qr-image" src="" alt="Mã QR thanh toán" class="qr-modal__qr-image">
+      </div>
+      <div class="qr-modal__bank-info">
+        <p><strong>Thông tin chuyển khoản:</strong></p>
+        <p>Ngân hàng: <strong>MB Bank</strong></p>
+        <p>Số tài khoản: <strong>080838689999</strong></p>
+        <p>Chủ tài khoản: <strong>ENZARA VIET NAM</strong></p>
+        <p class="qr-modal__note">Nội dung CK: <strong id="qr-transfer-content"></strong></p>
+      </div>
+      <div class="qr-modal__instructions">
+        <p>1. Mở ứng dụng ngân hàng của bạn</p>
+        <p>2. Quét mã QR hoặc chuyển khoản thủ công</p>
+        <p>3. Kiểm tra thông tin và xác nhận thanh toán</p>
+        <p>4. Chúng tôi sẽ gọi xác nhận đơn hàng sau khi nhận tiền</p>
+      </div>
+      <button type="button" class="btn btn-primary qr-modal__done-btn" id="qr-done-btn">Tôi đã thanh toán</button>
+    </div>
+  </div>
 
   <!-- Scripts -->
   <script src="js/animations.js"></script>
