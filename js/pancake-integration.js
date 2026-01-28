@@ -72,10 +72,7 @@
       shipping_fee: shippingFee,
 
       // Note with landing page info
-      note: `[Landing Page] Don hang tu ENZARA Landing Page - SL: ${orderData.quantity} chai`,
-
-      // Tags for tracking
-      tags: ['landing-page', 'website']
+      note: `[Landing Page] Don hang tu ENZARA Landing Page - SL: ${orderData.quantity} chai`
     };
 
     try {
