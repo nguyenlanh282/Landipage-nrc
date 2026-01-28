@@ -1,0 +1,7 @@
+name = "enzara-sepay-webhook"
+main = "src/index.js"
+compatibility_date = "2024-01-01"
+
+[vars]
+PANCAKE_SHOP_ID = "1890171475"
+PANCAKE_API_KEY = "9bfa8af5dfbc41c2b8ad1db542e8ca73"

@@ -32,7 +32,9 @@
     accountNumber: '080838689999',
     bankCode: 'mbbank',
     accountName: 'ENZARA VIET NAM',
-    qrApiUrl: 'https://qr.sepay.vn/img'
+    qrApiUrl: 'https://qr.sepay.vn/img',
+    // Cloudflare Worker URL for payment verification
+    webhookUrl: 'https://enzara-sepay-webhook.nguyenlanh282.workers.dev'
   };
 
   // ========================================
@@ -203,6 +205,7 @@
   // ========================================
 
   let countdownInterval = null;
+  let paymentCheckInterval = null;
 
   function showQRModal(orderData, result) {
     const modal = document.querySelector('#qr-modal');
@@ -218,8 +221,16 @@
     modal.querySelector('#qr-amount').textContent = formatCurrency(result.total);
     modal.querySelector('#qr-transfer-content').textContent = result.orderCode;
 
+    // Update done button to show checking status
+    const doneBtn = modal.querySelector('#qr-done-btn');
+    doneBtn.textContent = 'Đang chờ thanh toán...';
+    doneBtn.disabled = true;
+
     // Start 15 minute countdown
     startCountdown(modal, 15 * 60);
+
+    // Start polling for payment status
+    startPaymentCheck(orderData, result, modal);
 
     // Show modal
     modal.classList.add('active');
@@ -228,30 +239,37 @@
     // Setup close handlers
     const closeBtn = modal.querySelector('.qr-modal__close');
     const backdrop = modal.querySelector('.qr-modal__backdrop');
-    const doneBtn = modal.querySelector('#qr-done-btn');
 
     const closeModal = (paid = false) => {
-      // Stop countdown
+      // Stop intervals
       if (countdownInterval) {
         clearInterval(countdownInterval);
         countdownInterval = null;
+      }
+      if (paymentCheckInterval) {
+        clearInterval(paymentCheckInterval);
+        paymentCheckInterval = null;
       }
 
       modal.classList.remove('active');
       document.body.style.overflow = '';
 
-      if (paid) {
-        // Update payment status in Pancake POS
-        updatePaymentStatus(result.orderId, result.total, result.orderCode);
-        showBankTransferSuccess(orderData, result, true);
-      } else {
-        showBankTransferSuccess(orderData, result, false);
-      }
+      showBankTransferSuccess(orderData, result, paid);
     };
 
     closeBtn.onclick = () => closeModal(false);
     backdrop.onclick = () => closeModal(false);
-    doneBtn.onclick = () => closeModal(true);
+
+    // Manual confirm button (enabled after 30 seconds as fallback)
+    setTimeout(() => {
+      doneBtn.disabled = false;
+      doneBtn.textContent = 'Tôi đã thanh toán (xác nhận thủ công)';
+      doneBtn.onclick = () => {
+        // Manual confirmation - update Pancake POS
+        updatePaymentStatus(result.orderId, result.total, result.orderCode);
+        closeModal(true);
+      };
+    }, 30000);
 
     // ESC key to close
     const escHandler = (e) => {
@@ -261,6 +279,53 @@
       }
     };
     document.addEventListener('keydown', escHandler);
+  }
+
+  function startPaymentCheck(orderData, result, modal) {
+    const doneBtn = modal.querySelector('#qr-done-btn');
+    let checkCount = 0;
+    const maxChecks = 90; // 15 minutes / 10 seconds = 90 checks
+
+    const checkPayment = async () => {
+      checkCount++;
+
+      try {
+        const response = await fetch(`${SEPAY_CONFIG.webhookUrl}/check-payment?code=${result.orderCode}`);
+        const data = await response.json();
+
+        if (data.paid) {
+          // Payment confirmed by SePay!
+          clearInterval(paymentCheckInterval);
+          clearInterval(countdownInterval);
+
+          // Show success in modal
+          doneBtn.textContent = '✓ Thanh toán thành công!';
+          doneBtn.style.background = 'var(--color-success)';
+          doneBtn.disabled = false;
+
+          // Auto close after 2 seconds
+          setTimeout(() => {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+            showBankTransferSuccess(orderData, result, true);
+          }, 2000);
+
+          return;
+        }
+      } catch (error) {
+        console.log('Payment check error:', error);
+      }
+
+      if (checkCount >= maxChecks) {
+        clearInterval(paymentCheckInterval);
+      }
+    };
+
+    // Check every 10 seconds
+    paymentCheckInterval = setInterval(checkPayment, 10000);
+
+    // First check after 5 seconds
+    setTimeout(checkPayment, 5000);
   }
 
   function startCountdown(modal, seconds) {
