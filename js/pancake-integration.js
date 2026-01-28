@@ -48,10 +48,13 @@
 
     // Prepare order payload for Pancake POS
     const payload = {
-      // Customer info
-      customer_name: orderData.name,
-      customer_phone: orderData.phone,
-      customer_address: fullAddress,
+      // Shipping address with customer info
+      shipping_address: {
+        full_name: orderData.name,
+        phone_number: orderData.phone,
+        address: orderData.address,
+        full_address: fullAddress
+      },
 
       // Order source
       parent_id: PANCAKE_CONFIG.orderSource,
