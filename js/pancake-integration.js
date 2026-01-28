@@ -34,7 +34,8 @@
     accountName: 'ENZARA VIET NAM',
     qrApiUrl: 'https://qr.sepay.vn/img',
     // Cloudflare Worker URL for payment verification
-    webhookUrl: 'https://enzara-sepay-webhook.nguyenlanh282.workers.dev'
+    // TODO: Update this after deploying worker
+    webhookUrl: 'https://sepay-payment-gateway.nguyenlanh282.workers.dev'
   };
 
   // ========================================

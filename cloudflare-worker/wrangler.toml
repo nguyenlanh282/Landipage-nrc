@@ -1,7 +1,17 @@
-name = "enzara-sepay-webhook"
+name = "sepay-payment-gateway"
 main = "src/index.js"
 compatibility_date = "2024-01-01"
 
-[vars]
-PANCAKE_SHOP_ID = "1890171475"
-PANCAKE_API_KEY = "9bfa8af5dfbc41c2b8ad1db542e8ca73"
+# KV namespace for payment status storage
+# Run: wrangler kv:namespace create PAYMENT_STATUS
+# Then add the ID below
+# [[kv_namespaces]]
+# binding = "PAYMENT_STATUS"
+# id = "your-kv-id-here"
+
+# D1 database for multi-shop configuration (optional)
+# Run: wrangler d1 create sepay-gateway-db
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "sepay-gateway-db"
+# database_id = "your-db-id-here"
