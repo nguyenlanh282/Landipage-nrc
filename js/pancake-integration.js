@@ -123,14 +123,17 @@
       const result = await response.json();
 
       if (result.success || result.data) {
+        // Use total_price from API response for accuracy
+        const actualTotal = result.data?.total_price || total;
+
         return {
           success: true,
           orderId: result.data?.id || result.data?.order_id,
-          orderNumber: result.data?.display_id || result.data?.id,
+          orderNumber: result.data?.display_id || result.data?.system_id,
           trackingLink: result.data?.tracking_link,
           orderLink: result.data?.order_link,
           orderCode: orderCode,
-          total: total,
+          total: actualTotal,
           paymentMethod: orderData.paymentMethod,
           data: result.data
         };
@@ -199,6 +202,8 @@
   // QR MODAL FUNCTIONS
   // ========================================
 
+  let countdownInterval = null;
+
   function showQRModal(orderData, result) {
     const modal = document.querySelector('#qr-modal');
     if (!modal) return;
@@ -213,6 +218,9 @@
     modal.querySelector('#qr-amount').textContent = formatCurrency(result.total);
     modal.querySelector('#qr-transfer-content').textContent = result.orderCode;
 
+    // Start 15 minute countdown
+    startCountdown(modal, 15 * 60);
+
     // Show modal
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
@@ -222,42 +230,115 @@
     const backdrop = modal.querySelector('.qr-modal__backdrop');
     const doneBtn = modal.querySelector('#qr-done-btn');
 
-    const closeModal = () => {
+    const closeModal = (paid = false) => {
+      // Stop countdown
+      if (countdownInterval) {
+        clearInterval(countdownInterval);
+        countdownInterval = null;
+      }
+
       modal.classList.remove('active');
       document.body.style.overflow = '';
-      // Show success message after closing
-      showBankTransferSuccess(orderData, result);
+
+      if (paid) {
+        // Update payment status in Pancake POS
+        updatePaymentStatus(result.orderId, result.total, result.orderCode);
+        showBankTransferSuccess(orderData, result, true);
+      } else {
+        showBankTransferSuccess(orderData, result, false);
+      }
     };
 
-    closeBtn.onclick = closeModal;
-    backdrop.onclick = closeModal;
-    doneBtn.onclick = closeModal;
+    closeBtn.onclick = () => closeModal(false);
+    backdrop.onclick = () => closeModal(false);
+    doneBtn.onclick = () => closeModal(true);
 
     // ESC key to close
     const escHandler = (e) => {
       if (e.key === 'Escape') {
-        closeModal();
+        closeModal(false);
         document.removeEventListener('keydown', escHandler);
       }
     };
     document.addEventListener('keydown', escHandler);
   }
 
-  function showBankTransferSuccess(orderData, result) {
+  function startCountdown(modal, seconds) {
+    const countdownEl = modal.querySelector('#qr-countdown');
+    if (!countdownEl) return;
+
+    let remaining = seconds;
+
+    const updateDisplay = () => {
+      const mins = Math.floor(remaining / 60);
+      const secs = remaining % 60;
+      countdownEl.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+
+      if (remaining <= 60) {
+        countdownEl.style.color = 'var(--color-sunset-orange)';
+      }
+
+      if (remaining <= 0) {
+        clearInterval(countdownInterval);
+        countdownEl.textContent = 'Hết thời gian';
+        countdownEl.style.color = '#c00';
+      }
+    };
+
+    updateDisplay();
+    countdownInterval = setInterval(() => {
+      remaining--;
+      updateDisplay();
+    }, 1000);
+  }
+
+  async function updatePaymentStatus(orderId, amount, orderCode) {
+    // Update order with prepaid amount to mark as paid
+    const url = buildApiUrl(`/orders/${orderId}`);
+
+    try {
+      const response = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          prepaid: amount,
+          note: `[Landing Page] Chuyen khoan - Ma CK: ${orderCode} - DA THANH TOAN`
+        })
+      });
+
+      const result = await response.json();
+      console.log('Payment status updated:', result);
+      return result.success || result.data;
+    } catch (error) {
+      console.error('Failed to update payment status:', error);
+      return false;
+    }
+  }
+
+  function showBankTransferSuccess(orderData, result, isPaid) {
+    const paymentStatus = isPaid
+      ? '<span style="color: var(--color-success);">✓ Đã xác nhận thanh toán</span>'
+      : '<span style="color: var(--color-sunset-orange);">⏳ Chờ xác nhận thanh toán</span>';
+
     const successHTML = `
       <div class="order-success" style="text-align: center; padding: var(--space-8);">
-        <div style="font-size: 64px; margin-bottom: var(--space-4);">✅</div>
+        <div style="font-size: 64px; margin-bottom: var(--space-4);">${isPaid ? '✅' : '⏳'}</div>
         <h3 style="color: var(--color-forest-green); margin-bottom: var(--space-4);">Đơn hàng đã được ghi nhận!</h3>
         ${result.orderNumber ? `<p style="margin-bottom: var(--space-2); font-size: 14px; color: #666;">Mã đơn hàng: <strong>#${result.orderNumber}</strong></p>` : ''}
         <p style="margin-bottom: var(--space-2);">Cảm ơn <strong>${orderData.name}</strong> đã đặt hàng.</p>
-        <p style="margin-bottom: var(--space-4);">Mã chuyển khoản: <strong style="color: var(--color-sunset-orange);">${result.orderCode}</strong></p>
+        <p style="margin-bottom: var(--space-2);">Mã chuyển khoản: <strong style="color: var(--color-sunset-orange);">${result.orderCode}</strong></p>
+        <p style="margin-bottom: var(--space-4);">Trạng thái: ${paymentStatus}</p>
         <p style="font-size: var(--text-h3); font-weight: 700; color: var(--color-forest-green);">
           Số tiền: ${formatCurrency(result.total)}
         </p>
         <div style="margin-top: var(--space-6); padding: var(--space-4); background: var(--color-cream-yellow); border-radius: var(--radius-md);">
           <p style="font-size: 14px;">
-            <strong>Lưu ý:</strong> Đơn hàng sẽ được xử lý sau khi chúng tôi nhận được thanh toán.<br>
-            Chúng tôi sẽ liên hệ qua số <strong>${orderData.phone}</strong> để xác nhận.
+            ${isPaid
+              ? '<strong>Cảm ơn bạn đã thanh toán!</strong><br>Đơn hàng sẽ được xử lý và giao trong 2-4 ngày.'
+              : '<strong>Lưu ý:</strong> Nếu bạn đã thanh toán, đơn hàng sẽ được xử lý sau khi chúng tôi xác nhận.<br>Chúng tôi sẽ liên hệ qua số <strong>' + orderData.phone + '</strong> để xác nhận.'
+            }
           </p>
         </div>
       </div>

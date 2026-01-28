@@ -1250,8 +1250,26 @@
 .qr-modal__title {
   font-size: var(--text-h3);
   color: var(--color-forest-green);
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-3);
   text-align: center;
+}
+
+.qr-modal__countdown {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background: var(--color-off-white);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-4);
+  font-size: var(--text-body);
+}
+
+.qr-modal__countdown strong {
+  font-size: var(--text-h3);
+  color: var(--color-forest-green);
+  font-family: var(--font-mono, monospace);
 }
 
 .qr-modal__order-info {
