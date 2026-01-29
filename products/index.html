@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ENZARA - Tẩy Rửa Hữu Cơ Từ Enzyme Dứa</title>
   <meta name="description" content="ENZARA - Thương hiệu tẩy rửa hữu cơ Việt Nam với 91% enzyme từ dứa tự nhiên. An toàn cho sức khỏe và môi trường.">
-  <link rel="icon" type="image/png" href="assets/images/enzara-icon.png">
+  <link rel="icon" type="image/png" href="../assets/images/enzara-icon.png">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -89,11 +89,13 @@
     }
 
     .product-card {
+      display: block;
       background: var(--white);
       border-radius: var(--radius-lg);
       overflow: hidden;
       box-shadow: 0 2px 10px rgba(0,0,0,0.08);
       transition: all 0.3s ease;
+      cursor: pointer;
     }
     .product-card:hover {
       transform: translateY(-4px);
@@ -194,7 +196,7 @@
 <body>
   <header class="header">
     <a href="/" class="header__logo">
-      <img src="assets/images/enzara-logo.png" alt="ENZARA">
+      <img src="../assets/images/enzara-logo.png" alt="ENZARA">
     </a>
   </header>
 
@@ -208,59 +210,95 @@
 
     <div class="products-grid">
       <!-- Sản phẩm 1: Nước rửa chén hương dứa -->
-      <div class="product-card">
+      <a href="nuoc-rua-chen-dua/index.html" class="product-card">
         <div class="product-card__image" style="position: relative;">
-          <img src="assets/images/product-1.jpg" alt="Nước Rửa Chén ENZARA Hương Dứa">
+          <img src="../assets/images/product-dua.jpg" alt="Nước Rửa Chén ENZARA Hương Dứa">
           <span class="product-card__badge">-33%</span>
         </div>
         <div class="product-card__content">
           <h3 class="product-card__name">Nước Rửa Chén Hữu Cơ ENZARA Hương Dứa</h3>
-          <p class="product-card__desc">500ml - 91% Enzyme Tự Nhiên</p>
+          <p class="product-card__desc">500g - 91% Enzyme Tự Nhiên</p>
           <div class="product-card__price">
-            <span class="product-card__price-original">75.000đ</span>
-            <span class="product-card__price-sale">50.000đ</span>
+            <span class="product-card__price-original">112.000đ</span>
+            <span class="product-card__price-sale">75.000đ</span>
           </div>
-          <a href="products/nuoc-rua-chen-dua/" class="product-card__btn">Xem Chi Tiết</a>
+          <span class="product-card__btn">Xem Chi Tiết</span>
         </div>
-      </div>
+      </a>
 
-      <!-- Sản phẩm 2: Nước rửa chén hương gừng -->
-      <div class="product-card">
+      <!-- Sản phẩm 2: Nước rửa chén chiết xuất gừng -->
+      <a href="nuoc-rua-chen-gung/index.html" class="product-card">
         <div class="product-card__image" style="position: relative;">
-          <img src="assets/images/gung-1.png" alt="Nước Rửa Chén ENZARA Chiết Xuất Dịch Gừng Tươi">
+          <img src="../assets/images/gung-1.png" alt="Nước Rửa Chén ENZARA Chiết Xuất Gừng">
           <span class="product-card__badge">-33%</span>
         </div>
         <div class="product-card__content">
-          <h3 class="product-card__name">Nước Rửa Chén Hữu Cơ ENZARA Chiết Xuất Dịch Gừng Tươi</h3>
-          <p class="product-card__desc">500ml - Khử mùi tanh, ấm tay</p>
+          <h3 class="product-card__name">Nước Rửa Chén Hữu Cơ ENZARA Chiết Xuất Gừng</h3>
+          <p class="product-card__desc">500g - Khử mùi tanh, ấm tay</p>
           <div class="product-card__price">
-            <span class="product-card__price-original">75.000đ</span>
-            <span class="product-card__price-sale">50.000đ</span>
+            <span class="product-card__price-original">112.000đ</span>
+            <span class="product-card__price-sale">75.000đ</span>
           </div>
-          <a href="products/nuoc-rua-chen-gung/" class="product-card__btn">Xem Chi Tiết</a>
+          <span class="product-card__btn">Xem Chi Tiết</span>
         </div>
-      </div>
+      </a>
 
-      <!-- Sản phẩm 3: Coming soon -->
-      <div class="product-card" style="opacity: 0.6;">
-        <div class="product-card__image" style="position: relative; background: var(--olive-pale);">
-          <img src="assets/images/enzara-icon.png" alt="Sản phẩm mới" style="padding: 40px; object-fit: contain;">
+      <!-- Sản phẩm 3: Nước rửa rau củ quả -->
+      <a href="nuoc-rua-rau-cu/index.html" class="product-card">
+        <div class="product-card__image" style="position: relative;">
+          <img src="../assets/images/product-rau-cu.png" alt="Nước Rửa Rau Củ Quả ENZARA">
+          <span class="product-card__badge">-33%</span>
         </div>
         <div class="product-card__content">
-          <h3 class="product-card__name">Nước Giặt Enzyme ENZARA</h3>
-          <p class="product-card__desc">Sắp ra mắt</p>
+          <h3 class="product-card__name">Nước Rửa Rau Củ Quả Hữu Cơ ENZARA</h3>
+          <p class="product-card__desc">500g - Loại bỏ hóa chất, vi khuẩn</p>
           <div class="product-card__price">
-            <span class="product-card__price-sale" style="color: var(--olive-dark);">Coming Soon</span>
+            <span class="product-card__price-original">127.000đ</span>
+            <span class="product-card__price-sale">85.000đ</span>
           </div>
-          <span class="product-card__btn" style="background: var(--border-light); color: var(--text-light); cursor: not-allowed;">Sắp Ra Mắt</span>
+          <span class="product-card__btn">Xem Chi Tiết</span>
         </div>
-      </div>
+      </a>
+
+      <!-- Sản phẩm 4: Gel rửa bình sữa -->
+      <a href="nuoc-rua-binh-sua/index.html" class="product-card">
+        <div class="product-card__image" style="position: relative;">
+          <img src="../assets/images/product-binh-sua.jpg" alt="Gel Rửa Bình Sữa ENZARA">
+          <span class="product-card__badge">-33%</span>
+        </div>
+        <div class="product-card__content">
+          <h3 class="product-card__name">Gel Rửa Bình Sữa Hữu Cơ ENZARA</h3>
+          <p class="product-card__desc">500g - An toàn cho bé yêu</p>
+          <div class="product-card__price">
+            <span class="product-card__price-original">118.000đ</span>
+            <span class="product-card__price-sale">79.000đ</span>
+          </div>
+          <span class="product-card__btn">Xem Chi Tiết</span>
+        </div>
+      </a>
+
+      <!-- Sản phẩm 5: Tẩy đa năng hương cam -->
+      <a href="tay-da-nang/index.html" class="product-card">
+        <div class="product-card__image" style="position: relative;">
+          <img src="../assets/images/tay-da-nang-1.jpg" alt="Tẩy Đa Năng ENZARA Hương Cam">
+          <span class="product-card__badge">-29%</span>
+        </div>
+        <div class="product-card__content">
+          <h3 class="product-card__name">Nước Tẩy Đa Năng ENZARA Hương Cam</h3>
+          <p class="product-card__desc">450ml - Tẩy sạch mọi vết bẩn</p>
+          <div class="product-card__price">
+            <span class="product-card__price-original">97.000đ</span>
+            <span class="product-card__price-sale">69.000đ</span>
+          </div>
+          <span class="product-card__btn">Xem Chi Tiết</span>
+        </div>
+      </a>
     </div>
   </section>
 
   <footer class="footer">
     <div class="footer__logo">
-      <img src="assets/images/enzara-logo.png" alt="ENZARA">
+      <img src="../assets/images/enzara-logo.png" alt="ENZARA">
     </div>
     <p><strong>ENZARA - Tẩy Rửa Hữu Cơ</strong></p>
     <p>Sản phẩm tẩy rửa từ enzyme dứa tự nhiên</p>

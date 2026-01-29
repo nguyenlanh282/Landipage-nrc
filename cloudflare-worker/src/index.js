@@ -24,8 +24,8 @@ const SHOPS = {
     pancakeApiKey: '9bfa8af5dfbc41c2b8ad1db542e8ca73',
     sepayAccount: '080838689999',
     sepayBank: 'mbbank',
-    orderPrefix: 'ENZARA',
-    allowedOrigins: ['https://nguyenlanh282.github.io', 'https://enzara.vn']
+    orderPrefix: 'ENZ',  // Matches ENZD, ENZG, ENZR, ENZB, ENZT
+    allowedOrigins: ['https://nguyenlanh282.github.io', 'https://enzara.vn', 'http://localhost', 'http://127.0.0.1']
   },
   // TEST - Tài khoản cá nhân để test
   'test': {
