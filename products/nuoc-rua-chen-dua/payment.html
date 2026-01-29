@@ -573,8 +573,8 @@
           <div class="transfer-info__row">
             <span class="transfer-info__label">Số tài khoản:</span>
             <span class="transfer-info__value">
-              <span id="accountNumber">86886799799</span>
-              <button class="copy-btn" onclick="copyText('86886799799')">Copy</button>
+              <span id="accountNumber">080838689999</span>
+              <button class="copy-btn" onclick="copyText('080838689999')">Copy</button>
             </span>
           </div>
           <div class="transfer-info__row">
@@ -670,12 +670,12 @@
 
   <script>
     // ========================================
-    // CONFIGURATION
+    // CONFIGURATION - ENZARA SEPAY
     // ========================================
     const CONFIG = {
-      accountNumber: '86886799799',
+      accountNumber: '080838689999',
       bankCode: 'mbbank',
-      orderPrefix: 'ENZ',
+      accountName: 'ENZARA VIET NAM',
       workerUrl: 'https://sepay-payment-gateway.it-nguyenlanh.workers.dev'
     };
 
@@ -684,12 +684,6 @@
     // ========================================
     function formatPrice(price) {
       return new Intl.NumberFormat('vi-VN').format(price) + 'đ';
-    }
-
-    function generateOrderCode() {
-      const timestamp = Date.now().toString().slice(-6);
-      const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
-      return `${CONFIG.orderPrefix}${timestamp}${random}`;
     }
 
     function buildQRUrl(amount, orderCode) {
@@ -741,8 +735,14 @@
       }
     }
 
-    // Generate order code
-    const orderCode = generateOrderCode();
+    // Generate order code - use from localStorage if available, otherwise generate new
+    const orderCode = orderData.orderCode || generateOrderCode();
+
+    function generateOrderCode() {
+      const timestamp = Date.now().toString().slice(-6);
+      const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+      return `ENZD${timestamp}${random}`;
+    }
 
     // ========================================
     // DISPLAY ORDER INFO
