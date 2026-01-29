@@ -21,14 +21,28 @@
         variationId: 'bdc46298-8f9d-4a38-a171-57eb6f318132',
         name: 'Nuoc Rua Chen Huu Co ENZARA Huong Dua 500g',
         price: 75000,
-        salePrice: 50000
+        salePrice: 75000
       },
       'nuoc-rua-chen-gung': {
-        id: '64adb4dd-3600-4945-8a4d-aba9f1dc0d3b', // Update with actual ID
-        variationId: 'bdc46298-8f9d-4a38-a171-57eb6f318133', // Update with actual ID
+        id: 'f1516e8b-66ca-4cbe-9194-f12c574589c6',
+        variationId: 'f1516e8b-66ca-4cbe-9194-f12c574589c6',
         name: 'Nuoc Rua Chen Huu Co ENZARA Chiet Xuat Gung 500g',
         price: 75000,
-        salePrice: 50000
+        salePrice: 75000
+      },
+      'nuoc-rua-rau-cu': {
+        id: '1bf0a6e1-a902-4961-bf91-501d208ef752',
+        variationId: '1bf0a6e1-a902-4961-bf91-501d208ef752',
+        name: 'Nuoc Rua Rau Cu Qua ENZARA Huong Dua 500g',
+        price: 85000,
+        salePrice: 85000
+      },
+      'nuoc-rua-binh-sua': {
+        id: '82c09a97-98f0-489a-8ca0-04481bb7a634',
+        variationId: '82c09a97-98f0-489a-8ca0-04481bb7a634',
+        name: 'Gel Rua Binh Sua Huu Co ENZARA 500g',
+        price: 79000,
+        salePrice: 79000
       }
     }
   };
@@ -53,6 +67,10 @@
     const path = window.location.pathname;
     if (path.includes('nuoc-rua-chen-gung')) {
       return 'nuoc-rua-chen-gung';
+    } else if (path.includes('nuoc-rua-rau-cu')) {
+      return 'nuoc-rua-rau-cu';
+    } else if (path.includes('nuoc-rua-binh-sua')) {
+      return 'nuoc-rua-binh-sua';
     }
     return 'nuoc-rua-chen-dua'; // default
   }
@@ -69,7 +87,13 @@
   }
 
   function generateOrderCode() {
-    const prefix = currentProductKey === 'nuoc-rua-chen-gung' ? 'ENZG' : 'ENZD';
+    const prefixes = {
+      'nuoc-rua-chen-dua': 'ENZD',
+      'nuoc-rua-chen-gung': 'ENZG',
+      'nuoc-rua-rau-cu': 'ENZR',
+      'nuoc-rua-binh-sua': 'ENZB'
+    };
+    const prefix = prefixes[currentProductKey] || 'ENZD';
     const timestamp = Date.now().toString().slice(-6);
     const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
     return `${prefix}${timestamp}${random}`;
