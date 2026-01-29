@@ -7,6 +7,31 @@
   <meta name="description" content="Nước rửa chén hữu cơ ENZARA với 91% enzyme từ dứa tự nhiên. Làm sạch dầu mỡ hiệu quả, dịu nhẹ cho da tay, an toàn cho sức khỏe và môi trường.">
   <link rel="icon" type="image/png" href="../../assets/images/enzara-icon.png">
 
+  <!-- Google Analytics (GA4) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
+
+  <!-- Facebook Pixel -->
+  <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', 'XXXXXXXXXXXXXXXXX');
+    fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=XXXXXXXXXXXXXXXXX&ev=PageView&noscript=1"/></noscript>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -2239,6 +2264,30 @@
 
       // Register payment with SePay worker
       await registerPayment(orderCode, formData.total);
+
+      // Track conversion events
+      if (typeof fbq !== 'undefined') {
+        fbq('track', 'InitiateCheckout', {
+          content_name: formData.productName,
+          content_ids: ['nuoc-rua-chen-dua'],
+          content_type: 'product',
+          value: formData.total,
+          currency: 'VND',
+          num_items: formData.quantity
+        });
+      }
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'begin_checkout', {
+          currency: 'VND',
+          value: formData.total,
+          items: [{
+            item_id: 'nuoc-rua-chen-dua',
+            item_name: formData.productName,
+            price: 50000,
+            quantity: formData.quantity
+          }]
+        });
+      }
 
       // Save to localStorage and redirect to payment
       localStorage.setItem('enzaraOrder', JSON.stringify(formData));

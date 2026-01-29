@@ -7,6 +7,31 @@
   <meta name="description" content="Thanh toán đơn hàng ENZARA - Nước rửa chén hữu cơ từ enzyme dứa tự nhiên">
   <link rel="icon" type="image/png" href="../../assets/images/enzara-icon.png">
 
+  <!-- Google Analytics (GA4) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
+
+  <!-- Facebook Pixel -->
+  <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', 'XXXXXXXXXXXXXXXXX');
+    fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=XXXXXXXXXXXXXXXXX&ev=PageView&noscript=1"/></noscript>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -855,6 +880,31 @@
     }
 
     function showSuccess(data) {
+      // Track purchase conversion
+      if (typeof fbq !== 'undefined') {
+        fbq('track', 'Purchase', {
+          content_name: orderData.productName,
+          content_ids: ['nuoc-rua-chen-dua'],
+          content_type: 'product',
+          value: orderData.total,
+          currency: 'VND',
+          num_items: orderData.quantity
+        });
+      }
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'purchase', {
+          transaction_id: orderCode,
+          currency: 'VND',
+          value: orderData.total,
+          items: [{
+            item_id: 'nuoc-rua-chen-dua',
+            item_name: orderData.productName,
+            price: 50000,
+            quantity: orderData.quantity
+          }]
+        });
+      }
+
       // Hide payment card, show success
       document.getElementById('paymentCard').style.display = 'none';
       document.querySelector('.card:nth-child(2)').style.display = 'none';
