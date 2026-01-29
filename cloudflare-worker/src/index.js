@@ -27,6 +27,16 @@ const SHOPS = {
     orderPrefix: 'ENZARA',
     allowedOrigins: ['https://nguyenlanh282.github.io', 'https://enzara.vn']
   },
+  // TEST - Tài khoản cá nhân để test
+  'test': {
+    name: 'TEST',
+    pancakeShopId: '1890171475',  // Dùng chung shop Pancake
+    pancakeApiKey: '9bfa8af5dfbc41c2b8ad1db542e8ca73',
+    sepayAccount: '86886799799',
+    sepayBank: 'mbbank',
+    orderPrefix: 'TEST',
+    allowedOrigins: ['*']
+  },
   // Add more shops here:
   // 'shopname': {
   //   name: 'Shop Name',
