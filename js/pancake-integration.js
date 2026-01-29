@@ -261,13 +261,13 @@
     backdrop.onclick = () => closeModal(false);
 
     // Manual confirm button (enabled after 30 seconds as fallback)
+    // NOTE: This does NOT confirm payment - only closes modal with "waiting" status
     setTimeout(() => {
       doneBtn.disabled = false;
-      doneBtn.textContent = 'Tôi đã thanh toán (xác nhận thủ công)';
+      doneBtn.textContent = 'Đóng (chờ xác nhận tự động)';
       doneBtn.onclick = () => {
-        // Manual confirmation - update Pancake POS
-        updatePaymentStatus(result.orderId, result.total, result.orderCode);
-        closeModal(true);
+        // Close modal but mark as NOT paid - waiting for webhook confirmation
+        closeModal(false);
       };
     }, 30000);
 
