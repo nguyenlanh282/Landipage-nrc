@@ -2002,10 +2002,102 @@
     });
 
     // ========================================
-    // FORM SUBMISSION
+    // PANCAKE POS CONFIGURATION
     // ========================================
-    document.getElementById('orderForm').addEventListener('submit', function(e) {
+    const PANCAKE_CONFIG = {
+      baseUrl: 'https://pos.pages.fm/api/v1',
+      shopId: '1890171475',
+      apiKey: '9bfa8af5dfbc41c2b8ad1db542e8ca73',
+      warehouseId: 'd5b4d4b3-2287-4823-a4f5-fdf25abd4164',
+      orderSource: -7,
+      product: {
+        variationId: '9a7c4c83-9e8a-4b8d-bc04-34f1234a9876', // Gung product variation ID - update if needed
+        name: 'Nuoc Rua Chen Huu Co ENZARA Chiet Xuat Gung 500g',
+        salePrice: 50000
+      }
+    };
+
+    const SEPAY_CONFIG = {
+      accountNumber: '080838689999',
+      bankCode: 'mbbank',
+      workerUrl: 'https://sepay-payment-gateway.it-nguyenlanh.workers.dev'
+    };
+
+    function generateOrderCode() {
+      const timestamp = Date.now().toString().slice(-6);
+      const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+      return `ENZG${timestamp}${random}`;
+    }
+
+    async function createPancakeOrder(orderData, orderCode) {
+      const url = `${PANCAKE_CONFIG.baseUrl}/shops/${PANCAKE_CONFIG.shopId}/orders?api_key=${PANCAKE_CONFIG.apiKey}`;
+
+      const addressParts = [orderData.address];
+      if (orderData.ward) addressParts.push(orderData.ward);
+      if (orderData.city) addressParts.push(orderData.city);
+      const fullAddress = addressParts.join(', ');
+
+      const payload = {
+        shipping_address: {
+          full_name: orderData.fullName,
+          phone_number: orderData.phone,
+          address: orderData.address,
+          full_address: fullAddress
+        },
+        parent_id: PANCAKE_CONFIG.orderSource,
+        items: [{
+          variation_id: PANCAKE_CONFIG.product.variationId,
+          quantity: orderData.quantity,
+          price: PANCAKE_CONFIG.product.salePrice,
+          is_bonus: false
+        }],
+        warehouse_id: PANCAKE_CONFIG.warehouseId,
+        payment_method: 'bank_transfer',
+        shipping_fee: orderData.shipping,
+        note: `[Landing Page] Chuyen khoan - ${PANCAKE_CONFIG.product.name} - SL: ${orderData.quantity} - Ma CK: ${orderCode}`
+      };
+
+      try {
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const result = await response.json();
+        console.log('Pancake POS response:', result);
+        return result;
+      } catch (error) {
+        console.error('Pancake POS error:', error);
+        return null;
+      }
+    }
+
+    async function registerPayment(orderCode, amount) {
+      try {
+        await fetch(`${SEPAY_CONFIG.workerUrl}/register-payment`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            orderCode: orderCode,
+            shopId: 'enzara',
+            amount: amount
+          })
+        });
+      } catch (error) {
+        console.error('Register payment error:', error);
+      }
+    }
+
+    // ========================================
+    // FORM SUBMISSION WITH PANCAKE POS
+    // ========================================
+    document.getElementById('orderForm').addEventListener('submit', async function(e) {
       e.preventDefault();
+
+      const submitBtn = this.querySelector('[type="submit"]');
+      const originalBtnHTML = submitBtn.innerHTML;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = 'Đang xử lý...';
 
       const formData = {
         fullName: document.getElementById('fullName').value,
@@ -2020,6 +2112,16 @@
       };
       formData.total = formData.subtotal + formData.shipping;
 
+      // Generate order code
+      const orderCode = generateOrderCode();
+      formData.orderCode = orderCode;
+
+      // Create order in Pancake POS
+      await createPancakeOrder(formData, orderCode);
+
+      // Register payment with SePay worker
+      await registerPayment(orderCode, formData.total);
+
       // Save to localStorage and redirect to payment
       localStorage.setItem('enzaraOrder', JSON.stringify(formData));
       window.location.href = 'payment.html';
@@ -2028,8 +2130,5 @@
     // Initialize
     loadProvinces();
   </script>
-
-  <!-- Pancake POS & SePay Integration -->
-  <script src="../js/product-integration.js"></script>
 </body>
 </html>
