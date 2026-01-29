@@ -43,6 +43,13 @@
         name: 'Gel Rua Binh Sua Huu Co ENZARA 500g',
         price: 79000,
         salePrice: 79000
+      },
+      'tay-da-nang': {
+        id: '60a37df1-f717-4f66-a174-906d954e2beb',
+        variationId: '60a37df1-f717-4f66-a174-906d954e2beb',
+        name: 'Nuoc Tay Da Nang ENZARA Huong Cam 450ml',
+        price: 69000,
+        salePrice: 69000
       }
     }
   };
@@ -71,6 +78,8 @@
       return 'nuoc-rua-rau-cu';
     } else if (path.includes('nuoc-rua-binh-sua')) {
       return 'nuoc-rua-binh-sua';
+    } else if (path.includes('tay-da-nang')) {
+      return 'tay-da-nang';
     }
     return 'nuoc-rua-chen-dua'; // default
   }
@@ -91,7 +100,8 @@
       'nuoc-rua-chen-dua': 'ENZD',
       'nuoc-rua-chen-gung': 'ENZG',
       'nuoc-rua-rau-cu': 'ENZR',
-      'nuoc-rua-binh-sua': 'ENZB'
+      'nuoc-rua-binh-sua': 'ENZB',
+      'tay-da-nang': 'ENZT'
     };
     const prefix = prefixes[currentProductKey] || 'ENZD';
     const timestamp = Date.now().toString().slice(-6);
