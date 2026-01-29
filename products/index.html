@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ENZARA - Tẩy Rửa Hữu Cơ Từ Enzyme Dứa</title>
+  <meta name="description" content="ENZARA - Thương hiệu tẩy rửa hữu cơ Việt Nam với 91% enzyme từ dứa tự nhiên. An toàn cho sức khỏe và môi trường.">
+  <link rel="icon" type="image/png" href="assets/images/enzara-icon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --olive-dark: #626c13;
+      --olive-medium: #738136;
+      --olive-pale: #e8ebd8;
+      --orange-primary: #de8d1e;
+      --orange-price: #d35400;
+      --text-title: #363c05;
+      --text-body: #555555;
+      --text-light: #789;
+      --white: #ffffff;
+      --off-white: #f8f9fa;
+      --border-light: #e9ecef;
+      --font-primary: 'Be Vietnam Pro', sans-serif;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --radius-xl: 30px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-primary);
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--text-body);
+      background: var(--off-white);
+    }
+    img { max-width: 100%; height: auto; display: block; }
+    a { text-decoration: none; color: inherit; }
+
+    .header {
+      background: var(--white);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      padding: 16px 0;
+      text-align: center;
+    }
+    .header__logo img { height: 48px; margin: 0 auto; }
+
+    .hero {
+      background: linear-gradient(135deg, var(--olive-pale) 0%, var(--white) 100%);
+      padding: 60px 20px;
+      text-align: center;
+    }
+    .hero h1 {
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--text-title);
+      margin-bottom: 16px;
+    }
+    .hero h1 span { color: var(--olive-dark); }
+    .hero p {
+      font-size: 18px;
+      color: var(--text-body);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .products {
+      padding: 60px 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .products h2 {
+      text-align: center;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text-title);
+      margin-bottom: 40px;
+    }
+    .products h2 span { color: var(--olive-dark); }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    .product-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      transition: all 0.3s ease;
+    }
+    .product-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+    }
+    .product-card__image {
+      aspect-ratio: 1;
+      overflow: hidden;
+    }
+    .product-card__image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+    .product-card:hover .product-card__image img {
+      transform: scale(1.05);
+    }
+    .product-card__badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: var(--orange-primary);
+      color: var(--white);
+      padding: 4px 12px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .product-card__content {
+      padding: 20px;
+    }
+    .product-card__name {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-title);
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+    .product-card__desc {
+      font-size: 14px;
+      color: var(--text-light);
+      margin-bottom: 12px;
+    }
+    .product-card__price {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .product-card__price-original {
+      font-size: 14px;
+      color: var(--text-light);
+      text-decoration: line-through;
+    }
+    .product-card__price-sale {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--orange-price);
+    }
+    .product-card__btn {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      background: var(--olive-dark);
+      color: var(--white);
+      border-radius: var(--radius-xl);
+      font-size: 14px;
+      font-weight: 600;
+      text-align: center;
+      transition: background 0.3s;
+    }
+    .product-card__btn:hover {
+      background: var(--olive-medium);
+    }
+
+    .footer {
+      background: #4e5b03;
+      color: var(--white);
+      padding: 40px 20px;
+      text-align: center;
+    }
+    .footer__logo img {
+      height: 40px;
+      margin: 0 auto 16px;
+      filter: brightness(0) invert(1);
+    }
+    .footer p { font-size: 14px; opacity: 0.9; }
+    .footer__copyright {
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255,255,255,0.2);
+      font-size: 13px;
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <a href="/" class="header__logo">
+      <img src="assets/images/enzara-logo.png" alt="ENZARA">
+    </a>
+  </header>
+
+  <section class="hero">
+    <h1>Tẩy Rửa Hữu Cơ <span>ENZARA</span></h1>
+    <p>91% enzyme từ dứa tự nhiên. An toàn cho sức khỏe gia đình và thân thiện với môi trường.</p>
+  </section>
+
+  <section class="products">
+    <h2>Sản Phẩm <span>Của Chúng Tôi</span></h2>
+
+    <div class="products-grid">
+      <!-- Sản phẩm 1: Nước rửa chén hương dứa -->
+      <div class="product-card">
+        <div class="product-card__image" style="position: relative;">
+          <img src="assets/images/product-1.jpg" alt="Nước Rửa Chén ENZARA Hương Dứa">
+          <span class="product-card__badge">-33%</span>
+        </div>
+        <div class="product-card__content">
+          <h3 class="product-card__name">Nước Rửa Chén Hữu Cơ ENZARA Hương Dứa</h3>
+          <p class="product-card__desc">500ml - 91% Enzyme Tự Nhiên</p>
+          <div class="product-card__price">
+            <span class="product-card__price-original">75.000đ</span>
+            <span class="product-card__price-sale">50.000đ</span>
+          </div>
+          <a href="products/nuoc-rua-chen-dua/" class="product-card__btn">Xem Chi Tiết</a>
+        </div>
+      </div>
+
+      <!-- Sản phẩm 2: Nước rửa chén hương gừng -->
+      <div class="product-card">
+        <div class="product-card__image" style="position: relative;">
+          <img src="assets/images/gung-1.png" alt="Nước Rửa Chén ENZARA Chiết Xuất Dịch Gừng Tươi">
+          <span class="product-card__badge">-33%</span>
+        </div>
+        <div class="product-card__content">
+          <h3 class="product-card__name">Nước Rửa Chén Hữu Cơ ENZARA Chiết Xuất Dịch Gừng Tươi</h3>
+          <p class="product-card__desc">500ml - Khử mùi tanh, ấm tay</p>
+          <div class="product-card__price">
+            <span class="product-card__price-original">75.000đ</span>
+            <span class="product-card__price-sale">50.000đ</span>
+          </div>
+          <a href="products/nuoc-rua-chen-gung/" class="product-card__btn">Xem Chi Tiết</a>
+        </div>
+      </div>
+
+      <!-- Sản phẩm 3: Coming soon -->
+      <div class="product-card" style="opacity: 0.6;">
+        <div class="product-card__image" style="position: relative; background: var(--olive-pale);">
+          <img src="assets/images/enzara-icon.png" alt="Sản phẩm mới" style="padding: 40px; object-fit: contain;">
+        </div>
+        <div class="product-card__content">
+          <h3 class="product-card__name">Nước Giặt Enzyme ENZARA</h3>
+          <p class="product-card__desc">Sắp ra mắt</p>
+          <div class="product-card__price">
+            <span class="product-card__price-sale" style="color: var(--olive-dark);">Coming Soon</span>
+          </div>
+          <span class="product-card__btn" style="background: var(--border-light); color: var(--text-light); cursor: not-allowed;">Sắp Ra Mắt</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer__logo">
+      <img src="assets/images/enzara-logo.png" alt="ENZARA">
+    </div>
+    <p><strong>ENZARA - Tẩy Rửa Hữu Cơ</strong></p>
+    <p>Sản phẩm tẩy rửa từ enzyme dứa tự nhiên</p>
+    <div class="footer__copyright">
+      &copy; 2025 ENZARA. All rights reserved.
+    </div>
+  </footer>
+</body>
+</html>
