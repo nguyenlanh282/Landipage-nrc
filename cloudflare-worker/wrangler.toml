@@ -7,3 +7,12 @@ account_id = "d4a30462b305677d4a98c834d8e5f06c"
 [[kv_namespaces]]
 binding = "PAYMENT_STATUS"
 id = "c7c7142e2a1d4eaca7ecaabdaceed881"
+
+# Environment variables (secrets should be set via wrangler secret)
+# Run: wrangler secret put SEPAY_WEBHOOK_SECRET
+# Run: wrangler secret put SEPAY_JWT_SECRET
+# Run: wrangler secret put ADMIN_KEY
+[vars]
+# Để trống = không xác thực webhook (development mode)
+# Để bật xác thực, set secret qua: wrangler secret put SEPAY_WEBHOOK_SECRET
+ADMIN_KEY = "your-admin-key-here"

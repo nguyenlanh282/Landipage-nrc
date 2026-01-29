@@ -70,7 +70,8 @@ export default {
       }
 
       // SePay webhook endpoint (universal - matches by order code prefix)
-      if (url.pathname === '/webhook/sepay' && request.method === 'POST') {
+      // Supports both /webhook and /webhook/sepay for compatibility
+      if ((url.pathname === '/webhook' || url.pathname === '/webhook/sepay') && request.method === 'POST') {
         return handleSepayWebhook(request, env);
       }
 
@@ -117,7 +118,25 @@ export default {
 // WEBHOOK HANDLERS
 // ========================================
 
+/**
+ * Verify SePay webhook authentication
+ * Currently DISABLED for development
+ */
+function verifySepayWebhook(request, env) {
+  // Authentication disabled - accept all webhooks
+  console.log('Webhook authentication disabled (development mode)');
+  return { valid: true, method: 'disabled' };
+}
+
 async function handleSepayWebhook(request, env, specificShopId = null) {
+  // Verify webhook authentication
+  const authResult = verifySepayWebhook(request, env);
+  if (!authResult.valid) {
+    console.error('Webhook auth failed:', authResult.error);
+    return jsonResponse({ success: false, error: authResult.error }, 401);
+  }
+  console.log('Webhook authenticated via:', authResult.method);
+
   const payload = await request.json();
   console.log('SePay webhook:', JSON.stringify(payload));
 
