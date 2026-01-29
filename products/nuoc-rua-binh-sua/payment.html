@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thanh Toán - ENZARA Rửa Bình Sữa</title>
+  <meta name="description" content="Thanh toán đơn hàng ENZARA - Nước rửa bình sữa hữu cơ an toàn cho bé">
+  <link rel="icon" type="image/png" href="../../assets/images/enzara-icon.png">
+
+  <!-- Google Analytics (GA4) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
+
+  <!-- Facebook Pixel -->
+  <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', 'XXXXXXXXXXXXXXXXX');
+    fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=XXXXXXXXXXXXXXXXX&ev=PageView&noscript=1"/></noscript>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --olive-dark: #626c13;
+      --olive-medium: #738136;
+      --olive-light: #8a9a4a;
+      --olive-pale: #e8ebd8;
+      --orange-primary: #de8d1e;
+      --orange-dark: #e67e22;
+      --orange-price: #d35400;
+      --red-urgent: #c0392b;
+      --green-success: #27ae60;
+      --text-dark: #4c503d;
+      --text-title: #363c05;
+      --text-body: #555555;
+      --text-light: #789;
+      --white: #ffffff;
+      --off-white: #f8f9fa;
+      --border-light: #e9ecef;
+      --footer-bg: #4e5b03;
+      --font-primary: 'Be Vietnam Pro', sans-serif;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --radius-xl: 30px;
+      --shadow-card: 0 2px 8px rgba(115, 129, 54, 0.1);
+      --shadow-card-hover: 0 4px 20px rgba(115, 129, 54, 0.15);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-primary);
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--text-body);
+      background: linear-gradient(180deg, var(--olive-pale) 0%, #f5f7f0 100%);
+      min-height: 100vh;
+    }
+    img { max-width: 100%; height: auto; display: block; }
+    a { text-decoration: none; color: inherit; }
+
+    /* Header */
+    .header {
+      background: var(--white);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      padding: 16px 0;
+      text-align: center;
+    }
+    .header__logo img {
+      height: 40px;
+      margin: 0 auto;
+    }
+
+    /* Main Container */
+    .payment-container {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 24px 16px 48px;
+    }
+
+    /* Steps */
+    .steps {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-light);
+    }
+    .step.active {
+      color: var(--olive-dark);
+      font-weight: 600;
+    }
+    .step__number {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--border-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 13px;
+    }
+    .step.active .step__number {
+      background: var(--olive-dark);
+      color: var(--white);
+    }
+    .step.completed .step__number {
+      background: var(--green-success);
+      color: var(--white);
+    }
+    .step__divider {
+      width: 40px;
+      height: 2px;
+      background: var(--border-light);
+    }
+
+    /* Card */
+    .card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card-hover);
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    .card__header {
+      background: var(--olive-dark);
+      color: var(--white);
+      padding: 16px 20px;
+      text-align: center;
+    }
+    .card__header h2 {
+      font-size: 18px;
+      font-weight: 600;
+    }
+    .card__body {
+      padding: 24px;
+    }
+
+    /* Order Summary */
+    .order-summary {
+      border-bottom: 1px dashed var(--border-light);
+      padding-bottom: 20px;
+      margin-bottom: 20px;
+    }
+    .order-item {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .order-item__image {
+      width: 60px;
+      height: 60px;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .order-item__image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .order-item__info {
+      flex: 1;
+    }
+    .order-item__name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-title);
+      margin-bottom: 4px;
+    }
+    .order-item__qty {
+      font-size: 13px;
+      color: var(--text-light);
+    }
+    .order-item__price {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--orange-price);
+    }
+    .order-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      font-size: 14px;
+    }
+    .order-row.total {
+      border-top: 2px solid var(--olive-pale);
+      margin-top: 8px;
+      padding-top: 16px;
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .order-row.total span:last-child {
+      color: var(--olive-dark);
+    }
+
+    /* Customer Info */
+    .customer-info {
+      font-size: 14px;
+      line-height: 1.8;
+    }
+    .customer-info strong {
+      color: var(--text-title);
+    }
+
+    /* QR Section */
+    .qr-section {
+      text-align: center;
+    }
+    .qr-section__title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-title);
+      margin-bottom: 16px;
+    }
+    .qr-code {
+      display: inline-block;
+      padding: 16px;
+      background: var(--white);
+      border: 3px solid var(--olive-pale);
+      border-radius: var(--radius-lg);
+      margin-bottom: 16px;
+    }
+    .qr-code img {
+      width: 220px;
+      height: 220px;
+    }
+
+    /* Transfer Info */
+    .transfer-info {
+      background: var(--off-white);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-bottom: 20px;
+      text-align: left;
+    }
+    .transfer-info__row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      font-size: 14px;
+      border-bottom: 1px dashed var(--border-light);
+    }
+    .transfer-info__row:last-child {
+      border-bottom: none;
+    }
+    .transfer-info__label {
+      color: var(--text-light);
+    }
+    .transfer-info__value {
+      font-weight: 600;
+      color: var(--text-title);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .copy-btn {
+      background: var(--olive-pale);
+      border: none;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--olive-dark);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .copy-btn:hover {
+      background: var(--olive-light);
+      color: var(--white);
+    }
+
+    /* Transfer Note */
+    .transfer-note {
+      background: linear-gradient(135deg, #fff8e6 0%, #fff 100%);
+      border: 2px solid var(--orange-primary);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .transfer-note__label {
+      font-size: 12px;
+      color: var(--orange-dark);
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    .transfer-note__code {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--orange-price);
+      letter-spacing: 1px;
+      word-break: break-all;
+    }
+
+    /* Countdown */
+    .countdown {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .countdown__label {
+      font-size: 13px;
+      color: var(--text-light);
+      margin-bottom: 8px;
+    }
+    .countdown__timer {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--olive-dark);
+    }
+    .countdown__timer.urgent {
+      color: var(--red-urgent);
+    }
+
+    /* Status */
+    .status {
+      padding: 16px;
+      border-radius: var(--radius-md);
+      text-align: center;
+      margin-bottom: 16px;
+      display: none;
+    }
+    .status.checking {
+      display: block;
+      background: #e3f2fd;
+      color: #1565c0;
+    }
+    .status.success {
+      display: block;
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+    .status.error {
+      display: block;
+      background: #ffebee;
+      color: #c62828;
+    }
+    .status__icon {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+    .status__text {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    /* Buttons */
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 16px 24px;
+      border-radius: var(--radius-xl);
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .btn--primary {
+      background: var(--olive-dark);
+      color: var(--white);
+    }
+    .btn--primary:hover {
+      background: var(--olive-medium);
+    }
+    .btn--success {
+      background: var(--green-success);
+      color: var(--white);
+    }
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .btn--outline {
+      background: transparent;
+      border: 2px solid var(--olive-dark);
+      color: var(--olive-dark);
+      margin-top: 12px;
+    }
+    .btn--outline:hover {
+      background: var(--olive-dark);
+      color: var(--white);
+    }
+
+    /* Instructions */
+    .instructions {
+      background: var(--off-white);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      margin-top: 20px;
+    }
+    .instructions__title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-title);
+      margin-bottom: 12px;
+    }
+    .instructions ol {
+      padding-left: 20px;
+      font-size: 13px;
+      color: var(--text-body);
+    }
+    .instructions li {
+      margin-bottom: 8px;
+      list-style: decimal;
+    }
+    .instructions strong {
+      color: var(--orange-price);
+    }
+
+    /* Success Page */
+    .success-content {
+      text-align: center;
+      padding: 40px 24px;
+    }
+    .success-icon {
+      width: 80px;
+      height: 80px;
+      background: var(--green-success);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+    }
+    .success-icon svg {
+      width: 40px;
+      height: 40px;
+      stroke: var(--white);
+    }
+    .success-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-title);
+      margin-bottom: 12px;
+    }
+    .success-message {
+      font-size: 15px;
+      color: var(--text-body);
+      margin-bottom: 24px;
+    }
+    .success-details {
+      background: var(--off-white);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      text-align: left;
+      margin-bottom: 24px;
+    }
+    .success-details__row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      font-size: 14px;
+      border-bottom: 1px dashed var(--border-light);
+    }
+    .success-details__row:last-child {
+      border-bottom: none;
+    }
+
+    /* Animations */
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    .checking-animation {
+      animation: pulse 1.5s infinite;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 24px 16px;
+      font-size: 13px;
+      color: var(--text-light);
+    }
+    .footer a {
+      color: var(--olive-dark);
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <a href="index.html" class="header__logo">
+      <img src="../../assets/images/enzara-logo.png" alt="ENZARA">
+    </a>
+  </header>
+
+  <div class="payment-container">
+    <!-- Steps -->
+    <div class="steps">
+      <div class="step completed">
+        <span class="step__number">✓</span>
+        <span>Đặt hàng</span>
+      </div>
+      <div class="step__divider"></div>
+      <div class="step active" id="step-payment">
+        <span class="step__number">2</span>
+        <span>Thanh toán</span>
+      </div>
+      <div class="step__divider"></div>
+      <div class="step" id="step-complete">
+        <span class="step__number">3</span>
+        <span>Hoàn tất</span>
+      </div>
+    </div>
+
+    <!-- Payment Card -->
+    <div class="card" id="paymentCard">
+      <div class="card__header">
+        <h2>Thanh Toán Đơn Hàng</h2>
+      </div>
+      <div class="card__body">
+        <!-- Order Summary -->
+        <div class="order-summary">
+          <div class="order-item">
+            <div class="order-item__image">
+              <img src="../../assets/images/product-1.jpg" alt="ENZARA">
+            </div>
+            <div class="order-item__info">
+              <div class="order-item__name">Nước Rửa Bình Sữa Hữu Cơ ENZARA</div>
+              <div class="order-item__qty">Số lượng: <span id="displayQty">1</span></div>
+            </div>
+            <div class="order-item__price" id="displaySubtotal">50.000đ</div>
+          </div>
+          <div class="order-row">
+            <span>Phí vận chuyển:</span>
+            <span id="displayShipping">30.000đ</span>
+          </div>
+          <div class="order-row total">
+            <span>Tổng thanh toán:</span>
+            <span id="displayTotal">80.000đ</span>
+          </div>
+        </div>
+
+        <!-- Customer Info -->
+        <div class="customer-info" id="customerInfo">
+          <p><strong>Người nhận:</strong> <span id="displayName">---</span></p>
+          <p><strong>Điện thoại:</strong> <span id="displayPhone">---</span></p>
+          <p><strong>Địa chỉ:</strong> <span id="displayAddress">---</span></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- QR Payment Card -->
+    <div class="card">
+      <div class="card__header">
+        <h2>Quét Mã QR Để Thanh Toán</h2>
+      </div>
+      <div class="card__body">
+        <div class="qr-section">
+          <div class="qr-code">
+            <img id="qrImage" src="" alt="QR Code thanh toán">
+          </div>
+        </div>
+
+        <!-- Transfer Note -->
+        <div class="transfer-note">
+          <div class="transfer-note__label">Nội dung chuyển khoản (BẮT BUỘC)</div>
+          <div class="transfer-note__code" id="orderCode">---</div>
+        </div>
+
+        <!-- Transfer Info -->
+        <div class="transfer-info">
+          <div class="transfer-info__row">
+            <span class="transfer-info__label">Ngân hàng:</span>
+            <span class="transfer-info__value">MB Bank</span>
+          </div>
+          <div class="transfer-info__row">
+            <span class="transfer-info__label">Số tài khoản:</span>
+            <span class="transfer-info__value">
+              <span id="accountNumber">080838689999</span>
+              <button class="copy-btn" onclick="copyText('080838689999')">Copy</button>
+            </span>
+          </div>
+          <div class="transfer-info__row">
+            <span class="transfer-info__label">Chủ tài khoản:</span>
+            <span class="transfer-info__value" style="font-weight: 600; color: var(--olive-dark);">CÔNG TY TNHH ENZARA VIỆT NAM</span>
+          </div>
+          <div class="transfer-info__row">
+            <span class="transfer-info__label">Số tiền:</span>
+            <span class="transfer-info__value" id="transferAmount">80.000đ</span>
+          </div>
+        </div>
+
+        <!-- Countdown -->
+        <div class="countdown">
+          <div class="countdown__label">Thời gian còn lại để thanh toán</div>
+          <div class="countdown__timer" id="countdown">15:00</div>
+        </div>
+
+        <!-- Status -->
+        <div class="status" id="status">
+          <div class="status__icon"></div>
+          <div class="status__text"></div>
+        </div>
+
+        <!-- Check Button -->
+        <button class="btn btn--primary" id="checkBtn" onclick="checkPayment()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          Kiểm Tra Thanh Toán
+        </button>
+
+        <a href="index.html" class="btn btn--outline">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          Quay lại trang chủ
+        </a>
+
+        <!-- Instructions -->
+        <div class="instructions">
+          <div class="instructions__title">Hướng dẫn thanh toán:</div>
+          <ol>
+            <li>Mở ứng dụng ngân hàng (MB Bank, Vietcombank, BIDV...)</li>
+            <li>Quét mã QR hoặc chuyển khoản thủ công</li>
+            <li><strong>QUAN TRỌNG:</strong> Nhập đúng nội dung chuyển khoản</li>
+            <li>Xác nhận thanh toán trên ứng dụng ngân hàng</li>
+            <li>Hệ thống sẽ tự động xác nhận sau 5-10 giây</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <!-- Success Card (Hidden initially) -->
+    <div class="card" id="successCard" style="display: none;">
+      <div class="success-content">
+        <div class="success-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </div>
+        <h2 class="success-title">Thanh Toán Thành Công!</h2>
+        <p class="success-message">
+          Cảm ơn bạn đã đặt hàng. Chúng tôi sẽ giao hàng trong 2-5 ngày làm việc.
+        </p>
+        <div class="success-details">
+          <div class="success-details__row">
+            <span>Mã đơn hàng:</span>
+            <strong id="successOrderCode">---</strong>
+          </div>
+          <div class="success-details__row">
+            <span>Số tiền:</span>
+            <strong id="successAmount">---</strong>
+          </div>
+          <div class="success-details__row">
+            <span>Thời gian:</span>
+            <strong id="successTime">---</strong>
+          </div>
+        </div>
+        <a href="index.html" class="btn btn--success">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+          Về Trang Chủ
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>Cần hỗ trợ? Liên hệ <a href="tel:0123456789">0945.139.990</a></p>
+    <p>&copy; 2025 ENZARA - Tẩy Rửa Hữu Cơ Từ Enzyme Dứa</p>
+  </footer>
+
+  <script>
+    // ========================================
+    // CONFIGURATION - ENZARA SEPAY
+    // ========================================
+    const CONFIG = {
+      accountNumber: '080838689999',
+      bankCode: 'mbbank',
+      accountName: 'ENZARA VIET NAM',
+      workerUrl: 'https://sepay-payment-gateway.it-nguyenlanh.workers.dev'
+    };
+
+    // ========================================
+    // UTILITIES
+    // ========================================
+    function formatPrice(price) {
+      return new Intl.NumberFormat('vi-VN').format(price) + 'đ';
+    }
+
+    function buildQRUrl(amount, orderCode) {
+      const params = new URLSearchParams({
+        acc: CONFIG.accountNumber,
+        bank: CONFIG.bankCode,
+        amount: amount.toString(),
+        des: orderCode
+      });
+      return `https://qr.sepay.vn/img?${params.toString()}`;
+    }
+
+    function copyText(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        alert('Đã copy: ' + text);
+      }).catch(() => {
+        const input = document.createElement('input');
+        input.value = text;
+        document.body.appendChild(input);
+        input.select();
+        document.execCommand('copy');
+        document.body.removeChild(input);
+        alert('Đã copy: ' + text);
+      });
+    }
+
+    // ========================================
+    // ORDER DATA
+    // ========================================
+    let orderData = {
+      fullName: 'Khách hàng',
+      phone: '---',
+      city: '',
+      ward: '',
+      address: '',
+      quantity: 1,
+      subtotal: 50000,
+      shipping: 30000,
+      total: 80000
+    };
+
+    // Load from localStorage
+    const savedOrder = localStorage.getItem('enzaraOrder');
+    if (savedOrder) {
+      try {
+        orderData = JSON.parse(savedOrder);
+      } catch (e) {
+        console.error('Failed to parse order data:', e);
+      }
+    }
+
+    // Generate order code - use from localStorage if available, otherwise generate new
+    const orderCode = orderData.orderCode || generateOrderCode();
+
+    function generateOrderCode() {
+      const timestamp = Date.now().toString().slice(-6);
+      const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+      return `ENZD${timestamp}${random}`;
+    }
+
+    // ========================================
+    // DISPLAY ORDER INFO
+    // ========================================
+    function displayOrderInfo() {
+      document.getElementById('displayQty').textContent = orderData.quantity;
+      document.getElementById('displaySubtotal').textContent = formatPrice(orderData.subtotal);
+      document.getElementById('displayShipping').textContent = orderData.shipping === 0 ? 'Miễn phí' : formatPrice(orderData.shipping);
+      document.getElementById('displayTotal').textContent = formatPrice(orderData.total);
+      document.getElementById('transferAmount').textContent = formatPrice(orderData.total);
+
+      document.getElementById('displayName').textContent = orderData.fullName;
+      document.getElementById('displayPhone').textContent = orderData.phone;
+
+      let fullAddress = orderData.address;
+      if (orderData.ward) fullAddress += ', ' + orderData.ward;
+      if (orderData.city) fullAddress += ', ' + orderData.city;
+      document.getElementById('displayAddress').textContent = fullAddress || '---';
+
+      document.getElementById('orderCode').textContent = orderCode;
+      document.getElementById('qrImage').src = buildQRUrl(orderData.total, orderCode);
+    }
+
+    displayOrderInfo();
+
+    // ========================================
+    // COUNTDOWN TIMER
+    // ========================================
+    let timeLeft = 15 * 60; // 15 minutes
+    const countdownEl = document.getElementById('countdown');
+
+    function updateCountdown() {
+      const mins = Math.floor(timeLeft / 60);
+      const secs = timeLeft % 60;
+      countdownEl.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+
+      if (timeLeft <= 60) {
+        countdownEl.classList.add('urgent');
+      }
+
+      if (timeLeft > 0) {
+        timeLeft--;
+        setTimeout(updateCountdown, 1000);
+      } else {
+        countdownEl.textContent = 'Hết thời gian!';
+      }
+    }
+    updateCountdown();
+
+    // ========================================
+    // PAYMENT CHECK
+    // ========================================
+    let isChecking = false;
+    let checkInterval = null;
+
+    function startAutoCheck() {
+      checkInterval = setInterval(checkPayment, 10000);
+      setTimeout(checkPayment, 5000);
+    }
+
+    async function checkPayment() {
+      if (isChecking) return;
+      isChecking = true;
+
+      const statusEl = document.getElementById('status');
+      const checkBtn = document.getElementById('checkBtn');
+
+      statusEl.className = 'status checking checking-animation';
+      statusEl.innerHTML = '<div class="status__text">Đang kiểm tra thanh toán...</div>';
+      checkBtn.disabled = true;
+      checkBtn.innerHTML = '<span>Đang kiểm tra...</span>';
+
+      try {
+        const response = await fetch(`${CONFIG.workerUrl}/check-payment?code=${orderCode}`);
+        const data = await response.json();
+
+        console.log('Payment check result:', data);
+
+        if (data.paid) {
+          clearInterval(checkInterval);
+          showSuccess(data);
+        } else {
+          statusEl.className = 'status';
+          statusEl.style.display = 'block';
+          statusEl.style.background = '#fff8e1';
+          statusEl.style.color = '#f57c00';
+          statusEl.innerHTML = '<div class="status__text">Chưa nhận được thanh toán. Tự động kiểm tra lại...</div>';
+          checkBtn.disabled = false;
+          checkBtn.innerHTML = `
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            Kiểm Tra Thanh Toán
+          `;
+        }
+      } catch (error) {
+        console.error('Check payment error:', error);
+        statusEl.className = 'status error';
+        statusEl.innerHTML = '<div class="status__text">Lỗi kết nối. Vui lòng thử lại.</div>';
+        checkBtn.disabled = false;
+        checkBtn.innerHTML = `
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          Kiểm Tra Thanh Toán
+        `;
+      }
+
+      isChecking = false;
+    }
+
+    function showSuccess(data) {
+      // Track purchase conversion
+      if (typeof fbq !== 'undefined') {
+        fbq('track', 'Purchase', {
+          content_name: orderData.productName,
+          content_ids: ['nuoc-rua-binh-sua'],
+          content_type: 'product',
+          value: orderData.total,
+          currency: 'VND',
+          num_items: orderData.quantity
+        });
+      }
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'purchase', {
+          transaction_id: orderCode,
+          currency: 'VND',
+          value: orderData.total,
+          items: [{
+            item_id: 'nuoc-rua-binh-sua',
+            item_name: orderData.productName,
+            price: 50000,
+            quantity: orderData.quantity
+          }]
+        });
+      }
+
+      // Hide payment card, show success
+      document.getElementById('paymentCard').style.display = 'none';
+      document.querySelector('.card:nth-child(2)').style.display = 'none';
+      document.getElementById('successCard').style.display = 'block';
+
+      // Update steps
+      document.getElementById('step-payment').classList.remove('active');
+      document.getElementById('step-payment').classList.add('completed');
+      document.getElementById('step-payment').querySelector('.step__number').textContent = '✓';
+      document.getElementById('step-complete').classList.add('active');
+
+      // Display success info
+      document.getElementById('successOrderCode').textContent = orderCode;
+      document.getElementById('successAmount').textContent = formatPrice(data.amount || orderData.total);
+      document.getElementById('successTime').textContent = new Date(data.paidAt || Date.now()).toLocaleString('vi-VN');
+
+      // Clear localStorage
+      localStorage.removeItem('enzaraOrder');
+    }
+
+    // ========================================
+    // REGISTER PAYMENT & START
+    // ========================================
+    fetch(`${CONFIG.workerUrl}/register-payment`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        orderCode: orderCode,
+        shopId: 'enzara',
+        amount: orderData.total
+      })
+    }).then(r => r.json()).then(data => {
+      console.log('Payment registered:', data);
+    }).catch(err => {
+      console.log('Register payment error:', err);
+    });
+
+    startAutoCheck();
+  </script>
+</body>
+</html>
