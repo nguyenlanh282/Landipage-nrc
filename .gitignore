@@ -57,3 +57,13 @@ coverage/
 *.bak
 *.orig
 .sass-cache/
+
+# Screenshots
+Screenshot*.png
+
+# Cloudflare
+.wrangler/
+deploy/
+
+# Temp files
+temp_*.json
