@@ -66,9 +66,9 @@
   async function createPancakeOrder(orderData) {
     const url = buildApiUrl('/orders');
 
-    // Build full address
+    // Build full address (Số nhà, Phường/Xã, Tỉnh/TP) - API v2 không có Quận/Huyện
     const addressParts = [orderData.address];
-    if (orderData.district) addressParts.push(orderData.district);
+    if (orderData.ward) addressParts.push(orderData.ward);
     if (orderData.city) addressParts.push(orderData.city);
     const fullAddress = addressParts.join(', ');
 
@@ -201,160 +201,77 @@
   }
 
   // ========================================
-  // QR MODAL FUNCTIONS
+  // PAYMENT PAGE REDIRECT
   // ========================================
 
+  function openPaymentPage(orderData, result) {
+    // Save payment data to localStorage
+    const paymentData = {
+      orderCode: result.orderCode,
+      amount: result.total,
+      orderId: result.orderId,
+      orderNumber: result.orderNumber,
+      customerName: orderData.name,
+      customerPhone: orderData.phone,
+      createdAt: new Date().toISOString()
+    };
+
+    localStorage.setItem('enzara_payment', JSON.stringify(paymentData));
+
+    // Open payment page in new tab
+    window.open('payment.html', '_blank');
+
+    // Show waiting message on current page
+    showBankTransferWaiting(orderData, result);
+  }
+
+  function showBankTransferWaiting(orderData, result) {
+    const waitingHTML = `
+      <div class="order-success" style="text-align: center; padding: var(--space-8);">
+        <div style="font-size: 64px; margin-bottom: var(--space-4);">🏦</div>
+        <h3 style="color: var(--color-forest-green); margin-bottom: var(--space-4);">Đơn hàng đã được tạo!</h3>
+        ${result.orderNumber ? `<p style="margin-bottom: var(--space-2); font-size: 14px; color: #666;">Mã đơn hàng: <strong>#${result.orderNumber}</strong></p>` : ''}
+        <p style="margin-bottom: var(--space-2);">Mã chuyển khoản: <strong style="color: var(--color-sunset-orange); font-size: 18px;">${result.orderCode}</strong></p>
+        <p style="margin-bottom: var(--space-4);">Số tiền: <strong style="font-size: var(--text-h3); color: var(--color-forest-green);">${formatCurrency(result.total)}</strong></p>
+        <div style="margin: var(--space-6) 0; padding: var(--space-4); background: var(--color-cream-yellow); border-radius: var(--radius-md);">
+          <p style="font-size: 14px;">
+            <strong>Trang thanh toán đã mở ở tab mới.</strong><br>
+            Vui lòng quét mã QR hoặc chuyển khoản theo hướng dẫn.
+          </p>
+        </div>
+        <button onclick="window.open('payment.html', '_blank')" style="padding: 12px 24px; background: var(--color-forest-green); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer;">
+          Mở lại trang thanh toán
+        </button>
+        <p style="margin-top: var(--space-4); font-size: 13px; color: #666;">
+          Chúng tôi sẽ liên hệ qua số <strong>${orderData.phone}</strong> để xác nhận đơn hàng.
+        </p>
+      </div>
+    `;
+
+    const form = document.querySelector('#order-form');
+    if (form) {
+      form.innerHTML = waitingHTML;
+      form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+
+  // Legacy modal functions (kept for backwards compatibility)
   let countdownInterval = null;
   let paymentCheckInterval = null;
 
   function showQRModal(orderData, result) {
-    const modal = document.querySelector('#qr-modal');
-    if (!modal) return;
-
-    // Set QR image
-    const qrImage = modal.querySelector('#qr-image');
-    const qrUrl = buildQRUrl(result.total, result.orderCode);
-    qrImage.src = qrUrl;
-
-    // Set order info
-    modal.querySelector('#qr-order-code').textContent = result.orderCode;
-    modal.querySelector('#qr-amount').textContent = formatCurrency(result.total);
-    modal.querySelector('#qr-transfer-content').textContent = result.orderCode;
-
-    // Update done button to show checking status
-    const doneBtn = modal.querySelector('#qr-done-btn');
-    doneBtn.textContent = 'Đang chờ thanh toán...';
-    doneBtn.disabled = true;
-
-    // Start 15 minute countdown
-    startCountdown(modal, 15 * 60);
-
-    // Start polling for payment status
-    startPaymentCheck(orderData, result, modal);
-
-    // Show modal
-    modal.classList.add('active');
-    document.body.style.overflow = 'hidden';
-
-    // Setup close handlers
-    const closeBtn = modal.querySelector('.qr-modal__close');
-    const backdrop = modal.querySelector('.qr-modal__backdrop');
-
-    const closeModal = (paid = false) => {
-      // Stop intervals
-      if (countdownInterval) {
-        clearInterval(countdownInterval);
-        countdownInterval = null;
-      }
-      if (paymentCheckInterval) {
-        clearInterval(paymentCheckInterval);
-        paymentCheckInterval = null;
-      }
-
-      modal.classList.remove('active');
-      document.body.style.overflow = '';
-
-      showBankTransferSuccess(orderData, result, paid);
-    };
-
-    closeBtn.onclick = () => closeModal(false);
-    backdrop.onclick = () => closeModal(false);
-
-    // Manual confirm button (enabled after 30 seconds as fallback)
-    // NOTE: This does NOT confirm payment - only closes modal with "waiting" status
-    setTimeout(() => {
-      doneBtn.disabled = false;
-      doneBtn.textContent = 'Đóng (chờ xác nhận tự động)';
-      doneBtn.onclick = () => {
-        // Close modal but mark as NOT paid - waiting for webhook confirmation
-        closeModal(false);
-      };
-    }, 30000);
-
-    // ESC key to close
-    const escHandler = (e) => {
-      if (e.key === 'Escape') {
-        closeModal(false);
-        document.removeEventListener('keydown', escHandler);
-      }
-    };
-    document.addEventListener('keydown', escHandler);
+    // Redirect to new payment page instead of showing modal
+    openPaymentPage(orderData, result);
   }
 
   function startPaymentCheck(orderData, result, modal) {
-    const doneBtn = modal.querySelector('#qr-done-btn');
-    let checkCount = 0;
-    const maxChecks = 90; // 15 minutes / 10 seconds = 90 checks
-
-    const checkPayment = async () => {
-      checkCount++;
-
-      try {
-        const response = await fetch(`${SEPAY_CONFIG.webhookUrl}/check-payment?code=${result.orderCode}`);
-        const data = await response.json();
-
-        if (data.paid) {
-          // Payment confirmed by SePay!
-          clearInterval(paymentCheckInterval);
-          clearInterval(countdownInterval);
-
-          // Show success in modal
-          doneBtn.textContent = '✓ Thanh toán thành công!';
-          doneBtn.style.background = 'var(--color-success)';
-          doneBtn.disabled = false;
-
-          // Auto close after 2 seconds
-          setTimeout(() => {
-            modal.classList.remove('active');
-            document.body.style.overflow = '';
-            showBankTransferSuccess(orderData, result, true);
-          }, 2000);
-
-          return;
-        }
-      } catch (error) {
-        console.log('Payment check error:', error);
-      }
-
-      if (checkCount >= maxChecks) {
-        clearInterval(paymentCheckInterval);
-      }
-    };
-
-    // Check every 10 seconds
-    paymentCheckInterval = setInterval(checkPayment, 10000);
-
-    // First check after 5 seconds
-    setTimeout(checkPayment, 5000);
+    // Not used - payment check is now on payment.html page
+    return;
   }
 
   function startCountdown(modal, seconds) {
-    const countdownEl = modal.querySelector('#qr-countdown');
-    if (!countdownEl) return;
-
-    let remaining = seconds;
-
-    const updateDisplay = () => {
-      const mins = Math.floor(remaining / 60);
-      const secs = remaining % 60;
-      countdownEl.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-
-      if (remaining <= 60) {
-        countdownEl.style.color = 'var(--color-sunset-orange)';
-      }
-
-      if (remaining <= 0) {
-        clearInterval(countdownInterval);
-        countdownEl.textContent = 'Hết thời gian';
-        countdownEl.style.color = '#c00';
-      }
-    };
-
-    updateDisplay();
-    countdownInterval = setInterval(() => {
-      remaining--;
-      updateDisplay();
-    }, 1000);
+    // Not used - countdown is now on payment.html page
+    return;
   }
 
   async function updatePaymentStatus(orderId, amount, orderCode) {
@@ -441,15 +358,23 @@
     const quantity = parseInt(quantityEl?.value || quantityEl?.textContent) || 1;
 
     // Get payment method
-    const paymentMethod = form.querySelector('input[name="payment_method"]:checked')?.value || 'cod';
+    const paymentMethod = form.querySelector('input[name="payment_method"]:checked')?.value || 'bank_transfer';
+
+    // Get address from dropdowns (API v2: no district level)
+    const citySelect = document.getElementById('city');
+    const wardSelect = document.getElementById('ward');
+
+    const cityName = citySelect?.selectedOptions[0]?.dataset?.name || '';
+    const wardName = wardSelect?.selectedOptions[0]?.dataset?.name || '';
 
     // Prepare order data
     const orderData = {
       name: formData.get('name')?.trim(),
       phone: formData.get('phone')?.trim(),
       address: formData.get('address')?.trim(),
-      district: formData.get('district')?.trim(),
-      city: formData.get('city')?.trim(),
+      ward: wardName,
+      district: '', // API v2 không có cấp Quận/Huyện
+      city: cityName,
       quantity: quantity,
       paymentMethod: paymentMethod
     };
@@ -505,6 +430,8 @@
     const name = formData.get('name')?.trim();
     const phone = formData.get('phone')?.trim();
     const address = formData.get('address')?.trim();
+    const city = formData.get('city');
+    const ward = formData.get('ward');
 
     if (!name) {
       errors.name = 'Vui long nhap ho ten';
@@ -516,8 +443,16 @@
       errors.phone = 'So dien thoai khong hop le (10 so, bat dau bang 0)';
     }
 
+    if (!city) {
+      errors.city = 'Vui long chon Tinh/Thanh pho';
+    }
+
+    if (!ward) {
+      errors.ward = 'Vui long chon Phuong/Xa';
+    }
+
     if (!address) {
-      errors.address = 'Vui long nhap dia chi';
+      errors.address = 'Vui long nhap dia chi chi tiet';
     }
 
     return errors;

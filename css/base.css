@@ -232,3 +232,44 @@ ul, ol {
 .bg-off-white { background-color: var(--color-off-white); }
 .bg-gradient-hero { background: var(--gradient-hero); }
 .bg-gradient-nature { background: var(--gradient-nature); }
+
+/* Site Header */
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  padding: var(--space-3) 0;
+}
+
+.site-header .container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.site-logo img {
+  height: 36px;
+  width: auto;
+}
+
+@media (min-width: 768px) {
+  .site-logo img {
+    height: 44px;
+  }
+}
+
+/* Adjust body padding for fixed header */
+body {
+  padding-top: 60px;
+}
+
+@media (min-width: 768px) {
+  body {
+    padding-top: 68px;
+  }
+}
