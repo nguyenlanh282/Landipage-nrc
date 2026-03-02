@@ -10,7 +10,14 @@
       "Bash(CLOUDFLARE_ACCOUNT_ID=d4a30462b305677d4a98c834d8e5f06c npx wrangler pages project list:*)",
       "Bash(CLOUDFLARE_ACCOUNT_ID=d4a30462b305677d4a98c834d8e5f06c npx wrangler pages deploy:*)",
       "Bash(git add:*)",
-      "Bash(awk:*)"
+      "Bash(awk:*)",
+      "Bash(git commit:*)",
+      "Bash(git push)",
+      "Bash(copy \"Z:\\\\Landipage-nrc\\\\products\\\\nuoc-rua-chen-dua\\\\index.html\" \"Z:\\\\Landipage-nrc\\\\deploy\\\\nuoc-rua-chen-dua\\\\index.html\" /Y)",
+      "Bash(copy \"Z:\\\\Landipage-nrc\\\\products\\\\nuoc-rua-chen-gung\\\\index.html\" \"Z:\\\\Landipage-nrc\\\\deploy\\\\nuoc-rua-chen-gung\\\\index.html\" /Y)",
+      "Bash(copy \"Z:\\\\Landipage-nrc\\\\products\\\\nuoc-rua-rau-cu\\\\index.html\" \"Z:\\\\Landipage-nrc\\\\deploy\\\\nuoc-rua-rau-cu\\\\index.html\" /Y)",
+      "Bash(copy \"Z:\\\\Landipage-nrc\\\\products\\\\nuoc-rua-binh-sua\\\\index.html\" \"Z:\\\\Landipage-nrc\\\\deploy\\\\nuoc-rua-binh-sua\\\\index.html\" /Y)",
+      "Bash(copy \"Z:\\\\Landipage-nrc\\\\products\\\\tay-da-nang\\\\index.html\" \"Z:\\\\Landipage-nrc\\\\deploy\\\\tay-da-nang\\\\index.html\" /Y)"
     ]
   }
 }
