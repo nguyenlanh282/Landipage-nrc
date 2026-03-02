@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl:*)",
+      "Bash(python3:*)",
+      "Bash(for url in \"https://enzara.vn/product/nuoc-tay-da-nang/\" \"https://enzara.vn/product/gel-rua-binh-sua-huu-co-enzara/\" \"https://enzara.vn/product/nuoc-rua-rau-cu-qua-enzara-huong-dua/\" \"https://enzara.vn/product/nuoc-rua-chen-huu-co-enzara-huong-dua/\" \"https://enzara.vn/product/nuoc-tay-toilet-huu-co-enzara/\")",
+      "Bash(do echo \"=== $url ===\")",
+      "Bash(done)",
+      "Bash(npx wrangler:*)",
+      "Bash(CLOUDFLARE_ACCOUNT_ID=d4a30462b305677d4a98c834d8e5f06c npx wrangler pages project list:*)",
+      "Bash(CLOUDFLARE_ACCOUNT_ID=d4a30462b305677d4a98c834d8e5f06c npx wrangler pages deploy:*)",
+      "Bash(git add:*)",
+      "Bash(awk:*)"
+    ]
+  }
+}
