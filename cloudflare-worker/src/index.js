@@ -162,12 +162,12 @@ async function handleSepayWebhook(request, env, specificShopId = null) {
     // Shop-specific webhook
     matchedShop = SHOPS[specificShopId];
     shopId = specificShopId;
-    const match = content.match(new RegExp(`${matchedShop.orderPrefix}\\d+`, 'i'));
+    const match = content.match(new RegExp(`${matchedShop.orderPrefix}[A-Z]?\\d+`, 'i'));
     orderCode = match ? match[0] : null;
   } else {
     // Universal webhook - find by prefix
     for (const [id, shop] of Object.entries(SHOPS)) {
-      const match = content.match(new RegExp(`${shop.orderPrefix}\\d+`, 'i'));
+      const match = content.match(new RegExp(`${shop.orderPrefix}[A-Z]?\\d+`, 'i'));
       if (match) {
         matchedShop = shop;
         shopId = id;
