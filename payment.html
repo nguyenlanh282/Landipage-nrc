@@ -872,7 +872,9 @@
           body: JSON.stringify({
             orderCode: paymentData.orderCode,
             shopId: 'enzara',
-            amount: paymentData.amount
+            amount: paymentData.amount,
+            orderId: paymentData.orderId,
+            orderNumber: paymentData.orderNumber
           })
         });
       } catch (err) {}

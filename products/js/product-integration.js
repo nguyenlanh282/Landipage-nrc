@@ -205,7 +205,7 @@
   // REGISTER PAYMENT WITH SEPAY WORKER
   // ========================================
 
-  async function registerPayment(orderCode, amount) {
+  async function registerPayment(orderCode, amount, orderId, orderNumber) {
     try {
       const response = await fetch(`${SEPAY_CONFIG.workerUrl}/register-payment`, {
         method: 'POST',
@@ -213,7 +213,9 @@
         body: JSON.stringify({
           orderCode: orderCode,
           shopId: 'enzara',
-          amount: amount
+          amount: amount,
+          orderId: orderId,
+          orderNumber: orderNumber
         })
       });
       const data = await response.json();
@@ -274,7 +276,7 @@
     const result = await createPancakeOrder(orderData);
 
     // Register payment with SePay worker
-    await registerPayment(result.orderCode, result.total || total);
+    await registerPayment(result.orderCode, result.total || total, result.orderId, result.orderNumber);
 
     // Save order data to localStorage for payment page
     const paymentData = {

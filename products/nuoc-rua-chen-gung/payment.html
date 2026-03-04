@@ -589,6 +589,14 @@
           <div class="transfer-note__code" id="orderCode">---</div>
         </div>
 
+        <!-- POS Order Number (shown if available) -->
+        <div class="transfer-info" id="posOrderInfo" style="display: none; margin-bottom: 12px; background: #e8f5e9;">
+          <div class="transfer-info__row" style="border-bottom: none;">
+            <span class="transfer-info__label">Mã đơn hàng POS:</span>
+            <span class="transfer-info__value" id="posOrderNumber" style="color: #2e7d32;">---</span>
+          </div>
+        </div>
+
         <!-- Transfer Info -->
         <div class="transfer-info">
           <div class="transfer-info__row">
@@ -667,6 +675,10 @@
           Cảm ơn bạn đã đặt hàng. Chúng tôi sẽ giao hàng trong 2-5 ngày làm việc.
         </p>
         <div class="success-details">
+          <div class="success-details__row" id="successOrderNumberRow" style="display: none;">
+            <span>Mã đơn hàng POS:</span>
+            <strong id="successOrderNumber">---</strong>
+          </div>
           <div class="success-details__row">
             <span>Mã đơn hàng:</span>
             <strong id="successOrderCode">---</strong>
@@ -793,6 +805,12 @@
 
       document.getElementById('orderCode').textContent = orderCode;
       document.getElementById('qrImage').src = buildQRUrl(orderData.total, orderCode);
+
+      // Show POS order number if available
+      if (orderData.orderNumber) {
+        document.getElementById('posOrderNumber').textContent = orderData.orderNumber;
+        document.getElementById('posOrderInfo').style.display = '';
+      }
     }
 
     displayOrderInfo();
@@ -925,6 +943,13 @@
       document.getElementById('successAmount').textContent = formatPrice(data.amount || orderData.total);
       document.getElementById('successTime').textContent = new Date(data.paidAt || Date.now()).toLocaleString('vi-VN');
 
+      // Display order number from POS if available
+      const orderNumber = data.orderNumber || orderData.orderNumber;
+      if (orderNumber) {
+        document.getElementById('successOrderNumber').textContent = orderNumber;
+        document.getElementById('successOrderNumberRow').style.display = '';
+      }
+
       // Clear localStorage
       localStorage.removeItem('enzaraOrder');
     }
@@ -938,7 +963,9 @@
       body: JSON.stringify({
         orderCode: orderCode,
         shopId: 'enzara',
-        amount: orderData.total
+        amount: orderData.total,
+        orderId: orderData.orderId,
+        orderNumber: orderData.orderNumber
       })
     }).then(r => r.json()).then(data => {
       console.log('Payment registered:', data);

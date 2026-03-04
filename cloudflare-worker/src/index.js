@@ -185,27 +185,53 @@ async function handleSepayWebhook(request, env, specificShopId = null) {
   const amount = payload.transferAmount || payload.amount || 0;
   console.log(`Shop: ${shopId}, Order: ${orderCode}, Amount: ${amount}`);
 
-  // Find order in Pancake POS
-  const order = await findOrderByCode(orderCode, matchedShop);
-
-  if (!order) {
-    console.log('Order not found:', orderCode);
-    // Still save to KV for frontend polling
-    if (env.PAYMENT_STATUS) {
-      await env.PAYMENT_STATUS.put(orderCode, JSON.stringify({
-        paid: true,
-        amount,
-        shopId,
-        paidAt: new Date().toISOString(),
-        transactionId: payload.id || payload.referenceNumber,
-        orderNotFound: true
-      }), { expirationTtl: 86400 });
+  // Check KV for pre-registered orderId (from /register-payment)
+  let registeredData = null;
+  if (env.PAYMENT_STATUS) {
+    const stored = await env.PAYMENT_STATUS.get(orderCode);
+    if (stored) {
+      try {
+        registeredData = JSON.parse(stored);
+      } catch (e) {
+        console.error('Failed to parse registered data:', e);
+      }
     }
-    return jsonResponse({ success: true, message: 'Order not found, payment recorded' });
   }
 
-  // Update Pancake POS
-  const updateResult = await updateOrderPayment(order, amount, orderCode, matchedShop);
+  let updateResult = { success: false };
+  let resolvedOrderId = null;
+  let resolvedOrderNumber = registeredData?.orderNumber || null;
+
+  if (registeredData?.orderId) {
+    // Use orderId from KV directly - no need to search
+    console.log('Using registered orderId:', registeredData.orderId);
+    resolvedOrderId = registeredData.orderId;
+    updateResult = await updateOrderPaymentById(registeredData.orderId, amount, orderCode, matchedShop);
+  } else {
+    // Fallback: find order by searching recent orders
+    console.log('No registered orderId, searching by code:', orderCode);
+    const order = await findOrderByCode(orderCode, matchedShop);
+
+    if (!order) {
+      console.log('Order not found:', orderCode);
+      if (env.PAYMENT_STATUS) {
+        await env.PAYMENT_STATUS.put(orderCode, JSON.stringify({
+          paid: true,
+          amount,
+          shopId,
+          orderNumber: resolvedOrderNumber,
+          paidAt: new Date().toISOString(),
+          transactionId: payload.id || payload.referenceNumber,
+          orderNotFound: true
+        }), { expirationTtl: 86400 });
+      }
+      return jsonResponse({ success: true, message: 'Order not found, payment recorded' });
+    }
+
+    resolvedOrderId = order.id;
+    resolvedOrderNumber = resolvedOrderNumber || order.system_id;
+    updateResult = await updateOrderPayment(order, amount, orderCode, matchedShop);
+  }
 
   // Save to KV
   if (env.PAYMENT_STATUS) {
@@ -213,7 +239,8 @@ async function handleSepayWebhook(request, env, specificShopId = null) {
       paid: true,
       amount,
       shopId,
-      orderId: order.system_id,
+      orderId: resolvedOrderId,
+      orderNumber: resolvedOrderNumber,
       paidAt: new Date().toISOString(),
       transactionId: payload.id || payload.referenceNumber,
       pancakeUpdated: updateResult.success
@@ -223,7 +250,8 @@ async function handleSepayWebhook(request, env, specificShopId = null) {
   return jsonResponse({
     success: true,
     message: 'Payment confirmed',
-    orderId: order.system_id,
+    orderId: resolvedOrderId,
+    orderNumber: resolvedOrderNumber,
     shopId
   });
 }
@@ -275,6 +303,28 @@ async function updateOrderPayment(order, amount, orderCode, shop) {
   }
 }
 
+async function updateOrderPaymentById(orderId, amount, orderCode, shop) {
+  const url = `${PANCAKE_BASE_URL}/shops/${shop.pancakeShopId}/orders/${orderId}?api_key=${shop.pancakeApiKey}`;
+
+  try {
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        prepaid: amount,
+        note: `[Landing Page] Chuyen khoan - Ma CK: ${orderCode} - DA THANH TOAN (SePay xac nhan tu dong)`
+      })
+    });
+
+    const result = await response.json();
+    console.log('Pancake update by ID result:', result.success);
+    return { success: result.success || !!result.data };
+  } catch (error) {
+    console.error('Update order by ID error:', error);
+    return { success: false, error: error.message };
+  }
+}
+
 // ========================================
 // FRONTEND ENDPOINTS
 // ========================================
@@ -294,7 +344,7 @@ async function checkPaymentStatus(orderCode, env, corsHeaders) {
 }
 
 async function registerPayment(request, env, corsHeaders) {
-  const { orderCode, shopId, orderId, amount } = await request.json();
+  const { orderCode, shopId, orderId, orderNumber, amount } = await request.json();
 
   if (!orderCode || !shopId) {
     return jsonResponse({ error: 'Missing orderCode or shopId' }, 400, corsHeaders);
@@ -310,6 +360,7 @@ async function registerPayment(request, env, corsHeaders) {
       paid: false,
       shopId,
       orderId,
+      orderNumber,
       amount,
       registeredAt: new Date().toISOString()
     }), { expirationTtl: 86400 });
