@@ -779,6 +779,7 @@
 .bonus__grid {
   display: grid;
   gap: var(--space-4);
+  justify-content: center;
 }
 
 @media (min-width: 768px) {

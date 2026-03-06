@@ -754,9 +754,10 @@
       display: grid;
       gap: 20px;
       margin-top: 32px;
+      justify-content: center;
     }
     @media (min-width: 768px) {
-      .bonus__grid { grid-template-columns: repeat(2, 1fr); }
+      .bonus__grid { grid-template-columns: 1fr; max-width: 480px; margin-left: auto; margin-right: auto; }
     }
     .bonus__item {
       display: flex;
@@ -1860,10 +1861,10 @@
 
       <div class="bonus__grid">
         <div class="bonus__item">
-          <div class="bonus__item-icon">1</div>
+          <div class="bonus__item-icon">🎁</div>
           <div class="bonus__item-content">
-            <h4>Miếng Rửa Chén Cao Cấp</h4>
-            <p>Miếng rửa chén xơ mướp tự nhiên, không gây xước</p>
+            <h4>Đặc Biệt Tặng</h4>
+            <p>Miếng rửa chén xơ mướp tự nhiên cao cấp, không gây xước</p>
             <span class="value">Trị giá: 15.000đ</span>
           </div>
         </div>
