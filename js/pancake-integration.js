@@ -19,8 +19,8 @@
       id: '64adb4dd-3600-4945-8a4d-aba9f1dc0d3a',
       variationId: 'bdc46298-8f9d-4a38-a171-57eb6f318132',
       name: 'Nuoc Rua Chen Huu Co ENZARA Huong Dua 500g',
-      price: 75000, // Original price
-      salePrice: 50000 // Sale price on landing page
+      price: 45000,
+      salePrice: 45000
     }
   };
 

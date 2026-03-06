@@ -20,36 +20,36 @@
         id: '64adb4dd-3600-4945-8a4d-aba9f1dc0d3a',
         variationId: 'bdc46298-8f9d-4a38-a171-57eb6f318132',
         name: 'Nuoc Rua Chen Huu Co ENZARA Huong Dua 500g',
-        price: 75000,
-        salePrice: 75000
+        price: 45000,
+        salePrice: 45000
       },
       'nuoc-rua-chen-gung': {
         id: 'f1516e8b-66ca-4cbe-9194-f12c574589c6',
         variationId: 'f1516e8b-66ca-4cbe-9194-f12c574589c6',
         name: 'Nuoc Rua Chen Huu Co ENZARA Chiet Xuat Gung 500g',
-        price: 75000,
-        salePrice: 75000
+        price: 50000,
+        salePrice: 50000
       },
       'nuoc-rua-rau-cu': {
         id: '1bf0a6e1-a902-4961-bf91-501d208ef752',
         variationId: '1bf0a6e1-a902-4961-bf91-501d208ef752',
         name: 'Nuoc Rua Rau Cu Qua ENZARA Huong Dua 500g',
-        price: 85000,
-        salePrice: 85000
+        price: 55000,
+        salePrice: 55000
       },
       'nuoc-rua-binh-sua': {
         id: '82c09a97-98f0-489a-8ca0-04481bb7a634',
         variationId: '82c09a97-98f0-489a-8ca0-04481bb7a634',
         name: 'Gel Rua Binh Sua Huu Co ENZARA 500g',
-        price: 79000,
-        salePrice: 79000
+        price: 50000,
+        salePrice: 50000
       },
       'tay-da-nang': {
         id: '60a37df1-f717-4f66-a174-906d954e2beb',
         variationId: '60a37df1-f717-4f66-a174-906d954e2beb',
         name: 'Nuoc Tay Da Nang ENZARA Huong Cam 450ml',
-        price: 69000,
-        salePrice: 69000
+        price: 40000,
+        salePrice: 40000
       }
     }
   };
