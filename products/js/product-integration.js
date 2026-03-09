@@ -158,7 +158,7 @@
       warehouse_id: PANCAKE_CONFIG.warehouseId,
       payment_method: 'bank_transfer',
       shipping_fee: shippingFee,
-      note: `[Landing Page] Chuyen khoan - ${currentProduct.name} - SL: ${orderData.quantity} - Ma CK: ${orderCode}`
+      note: `[Landing Page] Chuyen khoan - ${currentProduct.name} - SL: ${orderData.quantity} - Ma CK: ${orderCode} - KH: ${orderData.fullName} - SDT: ${orderData.phone} - DC: ${fullAddress}${orderData.note ? ' - Ghi chu: ' + orderData.note : ''}`
     };
 
     try {
@@ -228,6 +228,52 @@
   }
 
   // ========================================
+  // FORM VALIDATION
+  // ========================================
+
+  function validateForm(form) {
+    const errors = [];
+    const fullName = form.querySelector('#fullName')?.value?.trim();
+    const phone = form.querySelector('#phone')?.value?.trim();
+    const city = form.querySelector('#city')?.value;
+    const ward = form.querySelector('#ward')?.value;
+    const address = form.querySelector('#address')?.value?.trim();
+
+    // Clear previous errors
+    form.querySelectorAll('.form-error').forEach(el => el.remove());
+    form.querySelectorAll('.form-group.has-error').forEach(el => el.classList.remove('has-error'));
+
+    if (!fullName) errors.push({ field: 'fullName', message: 'Vui lòng nhập họ và tên' });
+    if (!phone) {
+      errors.push({ field: 'phone', message: 'Vui lòng nhập số điện thoại' });
+    } else if (!/^0\d{9}$/.test(phone.replace(/\s/g, ''))) {
+      errors.push({ field: 'phone', message: 'Số điện thoại không hợp lệ (10 số, bắt đầu bằng 0)' });
+    }
+    if (!city) errors.push({ field: 'city', message: 'Vui lòng chọn Tỉnh/Thành phố' });
+    if (!ward) errors.push({ field: 'ward', message: 'Vui lòng chọn Phường/Xã' });
+    if (!address) errors.push({ field: 'address', message: 'Vui lòng nhập địa chỉ chi tiết' });
+
+    if (errors.length > 0) {
+      errors.forEach(err => {
+        const input = form.querySelector(`#${err.field}`);
+        if (input) {
+          const group = input.closest('.form-group');
+          if (group) group.classList.add('has-error');
+          const errorEl = document.createElement('p');
+          errorEl.className = 'form-error';
+          errorEl.style.cssText = 'color:#e74c3c;font-size:13px;margin-top:4px;';
+          errorEl.textContent = err.message;
+          input.parentNode.appendChild(errorEl);
+        }
+      });
+      const firstError = form.querySelector('.has-error');
+      if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return false;
+    }
+    return true;
+  }
+
+  // ========================================
   // FORM SUBMISSION HANDLER
   // ========================================
 
@@ -235,24 +281,22 @@
     e.preventDefault();
 
     const form = e.target;
+
+    // Validate form first
+    if (!validateForm(form)) return;
+
     const submitBtn = form.querySelector('[type="submit"]');
     const originalBtnHTML = submitBtn.innerHTML;
 
     // Disable button and show loading
     submitBtn.disabled = true;
-    submitBtn.innerHTML = `
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: spin 1s linear infinite;">
-        <circle cx="12" cy="12" r="10" stroke-opacity="0.3"></circle>
-        <path d="M12 2a10 10 0 0 1 10 10"></path>
-      </svg>
-      Đang xử lý...
-    `;
+    submitBtn.innerHTML = '<span style="display:inline-flex;align-items:center;gap:8px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation:spin 1s linear infinite"><circle cx="12" cy="12" r="10" stroke-opacity="0.3"></circle><path d="M12 2a10 10 0 0 1 10 10"></path></svg> Đang xử lý đơn hàng...</span>';
 
-    // Add spin animation
+    // Add spin animation + error styles
     if (!document.querySelector('#spin-style')) {
       const style = document.createElement('style');
       style.id = 'spin-style';
-      style.textContent = '@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }';
+      style.textContent = '@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}} .form-group.has-error input,.form-group.has-error select,.form-group.has-error textarea{border-color:#e74c3c!important}';
       document.head.appendChild(style);
     }
 
@@ -275,27 +319,46 @@
     // Create order in Pancake POS
     const result = await createPancakeOrder(orderData);
 
-    // Register payment with SePay worker
-    await registerPayment(result.orderCode, result.total || total, result.orderId, result.orderNumber);
+    if (result.success) {
+      // Register payment with SePay worker (pass orderId for linking)
+      await registerPayment(result.orderCode, result.total || total, result.orderId, result.orderNumber);
 
-    // Save order data to localStorage for payment page
-    const paymentData = {
-      ...orderData,
-      productKey: currentProductKey,
-      productName: currentProduct.name,
-      subtotal: subtotal,
-      shipping: shipping,
-      total: result.total || total,
-      orderCode: result.orderCode,
-      orderId: result.orderId,
-      orderNumber: result.orderNumber,
-      createdAt: new Date().toISOString()
-    };
+      // Save order data to localStorage for payment page
+      const paymentData = {
+        ...orderData,
+        productKey: currentProductKey,
+        productName: currentProduct.name,
+        subtotal: subtotal,
+        shipping: shipping,
+        total: result.total || total,
+        orderCode: result.orderCode,
+        orderId: result.orderId,
+        orderNumber: result.orderNumber,
+        createdAt: new Date().toISOString()
+      };
 
-    localStorage.setItem('enzaraOrder', JSON.stringify(paymentData));
+      localStorage.setItem('enzaraOrder', JSON.stringify(paymentData));
 
-    // Redirect to payment page
-    window.location.href = 'payment.html';
+      // Redirect to payment page
+      window.location.href = 'payment.html';
+    } else {
+      // Error - restore button and show error
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalBtnHTML;
+
+      let errorContainer = form.querySelector('.order-error-msg');
+      if (!errorContainer) {
+        errorContainer = document.createElement('div');
+        errorContainer.className = 'order-error-msg';
+        errorContainer.style.cssText = 'background:#fee2e2;border:1px solid #fca5a5;padding:16px;border-radius:8px;margin-bottom:16px;color:#dc2626;text-align:center;';
+        form.insertBefore(errorContainer, form.querySelector('.order-form__fields') || form.firstChild);
+      }
+      errorContainer.innerHTML = `
+        <p><strong>⚠️ Có lỗi xảy ra:</strong> ${result.error}</p>
+        <p style="font-size:14px;margin-top:8px;">Vui lòng thử lại hoặc gọi hotline: <a href="tel:0945139990" style="color:#dc2626;font-weight:bold;">0945.139.990</a></p>
+      `;
+      errorContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
   }
 
   // ========================================

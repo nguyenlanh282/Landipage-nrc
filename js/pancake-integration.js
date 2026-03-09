@@ -109,8 +109,8 @@
       payment_method: orderData.paymentMethod === 'bank_transfer' ? 'bank_transfer' : 'cod',
       shipping_fee: shippingFee,
 
-      // Note with landing page info and order code
-      note: `[Landing Page] ${paymentMethodLabel} - SL: ${orderData.quantity} chai${orderCode ? ' - Ma CK: ' + orderCode : ''}`
+      // Note with landing page info, order code, and full customer details
+      note: `[Landing Page] ${paymentMethodLabel} - SL: ${orderData.quantity} chai${orderCode ? ' - Ma CK: ' + orderCode : ''} - KH: ${orderData.name} - SDT: ${orderData.phone} - DC: ${fullAddress}`
     };
 
     try {

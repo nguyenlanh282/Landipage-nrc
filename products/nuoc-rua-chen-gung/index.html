@@ -2357,6 +2357,69 @@
       return `ENZG${timestamp}${random}`;
     }
 
+    // ========================================
+    // FORM VALIDATION
+    // ========================================
+    function validateForm() {
+      const errors = [];
+      const fullName = document.getElementById('fullName').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const city = document.getElementById('city').value;
+      const ward = document.getElementById('ward').value;
+      const address = document.getElementById('address').value.trim();
+
+      // Clear previous errors
+      document.querySelectorAll('.form-error').forEach(el => el.remove());
+      document.querySelectorAll('.form-group.has-error').forEach(el => el.classList.remove('has-error'));
+
+      if (!fullName) {
+        errors.push({ field: 'fullName', message: 'Vui lòng nhập họ và tên' });
+      }
+
+      if (!phone) {
+        errors.push({ field: 'phone', message: 'Vui lòng nhập số điện thoại' });
+      } else if (!/^0\d{9}$/.test(phone.replace(/\s/g, ''))) {
+        errors.push({ field: 'phone', message: 'Số điện thoại không hợp lệ (10 số, bắt đầu bằng 0)' });
+      }
+
+      if (!city) {
+        errors.push({ field: 'city', message: 'Vui lòng chọn Tỉnh/Thành phố' });
+      }
+
+      if (!ward) {
+        errors.push({ field: 'ward', message: 'Vui lòng chọn Phường/Xã' });
+      }
+
+      if (!address) {
+        errors.push({ field: 'address', message: 'Vui lòng nhập địa chỉ chi tiết' });
+      }
+
+      // Show errors
+      if (errors.length > 0) {
+        errors.forEach(err => {
+          const input = document.getElementById(err.field);
+          if (input) {
+            const group = input.closest('.form-group');
+            if (group) group.classList.add('has-error');
+            const errorEl = document.createElement('p');
+            errorEl.className = 'form-error';
+            errorEl.style.cssText = 'color: #e74c3c; font-size: 13px; margin-top: 4px;';
+            errorEl.textContent = err.message;
+            input.parentNode.appendChild(errorEl);
+          }
+        });
+        // Scroll to first error
+        const firstError = document.querySelector('.has-error');
+        if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return false;
+      }
+
+      return true;
+    }
+
+    // ========================================
+    // CREATE PANCAKE ORDER
+    // ========================================
     async function createPancakeOrder(orderData, orderCode) {
       const url = `${PANCAKE_CONFIG.baseUrl}/shops/${PANCAKE_CONFIG.shopId}/orders?api_key=${PANCAKE_CONFIG.apiKey}`;
 
@@ -2382,7 +2445,7 @@
         warehouse_id: PANCAKE_CONFIG.warehouseId,
         payment_method: 'bank_transfer',
         shipping_fee: orderData.shipping,
-        note: `[Landing Page] Chuyen khoan - ${PANCAKE_CONFIG.product.name} - SL: ${orderData.quantity} - Ma CK: ${orderCode}`
+        note: `[Landing Page] Chuyen khoan - ${PANCAKE_CONFIG.product.name} - SL: ${orderData.quantity} - Ma CK: ${orderCode} - KH: ${orderData.fullName} - SDT: ${orderData.phone} - DC: ${fullAddress}${orderData.note ? ' - Ghi chu: ' + orderData.note : ''}`
       };
 
       try {
@@ -2393,14 +2456,33 @@
         });
         const result = await response.json();
         console.log('Pancake POS response:', result);
-        return result;
+
+        if (result.success || result.data) {
+          return {
+            success: true,
+            orderId: result.data?.id || result.data?.order_id,
+            orderNumber: result.data?.display_id || result.data?.system_id,
+            totalPrice: result.data?.total_price,
+            data: result.data
+          };
+        } else {
+          console.error('Pancake POS error response:', result);
+          return {
+            success: false,
+            error: result.message || 'Không thể tạo đơn hàng trên Pancake POS'
+          };
+        }
       } catch (error) {
-        console.error('Pancake POS error:', error);
-        return null;
+        console.error('Pancake POS network error:', error);
+        return {
+          success: false,
+          error: 'Lỗi kết nối mạng. Vui lòng thử lại.',
+          networkError: true
+        };
       }
     }
 
-    async function registerPayment(orderCode, amount) {
+    async function registerPayment(orderCode, amount, orderId, orderNumber) {
       try {
         await fetch(`${SEPAY_CONFIG.workerUrl}/register-payment`, {
           method: 'POST',
@@ -2408,7 +2490,9 @@
           body: JSON.stringify({
             orderCode: orderCode,
             shopId: 'enzara',
-            amount: amount
+            amount: amount,
+            orderId: orderId,
+            orderNumber: orderNumber
           })
         });
       } catch (error) {
@@ -2422,19 +2506,31 @@
     document.getElementById('orderForm').addEventListener('submit', async function(e) {
       e.preventDefault();
 
+      // Validate form first
+      if (!validateForm()) return;
+
       const submitBtn = this.querySelector('[type="submit"]');
       const originalBtnHTML = submitBtn.innerHTML;
       submitBtn.disabled = true;
-      submitBtn.innerHTML = 'Đang xử lý...';
+      submitBtn.innerHTML = '<span style="display:inline-flex;align-items:center;gap:8px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation:spin 1s linear infinite"><circle cx="12" cy="12" r="10" stroke-opacity="0.3"></circle><path d="M12 2a10 10 0 0 1 10 10"></path></svg> Đang xử lý đơn hàng...</span>';
+
+      // Add spin animation
+      if (!document.querySelector('#spin-style')) {
+        const style = document.createElement('style');
+        style.id = 'spin-style';
+        style.textContent = '@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}} .form-group.has-error input,.form-group.has-error select,.form-group.has-error textarea{border-color:#e74c3c!important}';
+        document.head.appendChild(style);
+      }
 
       const formData = {
-        fullName: document.getElementById('fullName').value,
-        phone: document.getElementById('phone').value,
+        fullName: document.getElementById('fullName').value.trim(),
+        phone: document.getElementById('phone').value.trim(),
         city: document.getElementById('city').options[document.getElementById('city').selectedIndex].text,
         ward: document.getElementById('ward').options[document.getElementById('ward').selectedIndex].text,
-        address: document.getElementById('address').value,
-        note: document.getElementById('note').value,
+        address: document.getElementById('address').value.trim(),
+        note: document.getElementById('note').value.trim(),
         quantity: parseInt(document.getElementById('quantity').value),
+        productName: PANCAKE_CONFIG.product.name,
         subtotal: parseInt(document.getElementById('quantity').value) * PRICE_PER_ITEM,
         shipping: parseInt(document.getElementById('quantity').value) >= FREE_SHIPPING_QTY ? 0 : SHIPPING_FEE
       };
@@ -2445,38 +2541,64 @@
       formData.orderCode = orderCode;
 
       // Create order in Pancake POS
-      await createPancakeOrder(formData, orderCode);
+      const pancakeResult = await createPancakeOrder(formData, orderCode);
 
-      // Register payment with SePay worker
-      await registerPayment(orderCode, formData.total);
+      if (pancakeResult.success) {
+        // Save Pancake order info
+        formData.orderId = pancakeResult.orderId;
+        formData.orderNumber = pancakeResult.orderNumber;
+        if (pancakeResult.totalPrice) formData.total = pancakeResult.totalPrice;
 
-      // Track conversion events
-      if (typeof fbq !== 'undefined') {
-        fbq('track', 'InitiateCheckout', {
-          content_name: formData.productName,
-          content_ids: ['nuoc-rua-chen-gung'],
-          content_type: 'product',
-          value: formData.total,
-          currency: 'VND',
-          num_items: formData.quantity
-        });
+        // Register payment with SePay worker (pass orderId for linking)
+        await registerPayment(orderCode, formData.total, pancakeResult.orderId, pancakeResult.orderNumber);
+
+        // Track conversion events
+        if (typeof fbq !== 'undefined') {
+          fbq('track', 'InitiateCheckout', {
+            content_name: PANCAKE_CONFIG.product.name,
+            content_ids: ['nuoc-rua-chen-gung'],
+            content_type: 'product',
+            value: formData.total,
+            currency: 'VND',
+            num_items: formData.quantity
+          });
+        }
+        if (typeof gtag !== 'undefined') {
+          gtag('event', 'begin_checkout', {
+            currency: 'VND',
+            value: formData.total,
+            items: [{
+              item_id: 'nuoc-rua-chen-gung',
+              item_name: PANCAKE_CONFIG.product.name,
+              price: PANCAKE_CONFIG.product.salePrice,
+              quantity: formData.quantity
+            }]
+          });
+        }
+
+        // Save to localStorage and redirect to payment
+        formData.createdAt = new Date().toISOString();
+        localStorage.setItem('enzaraOrder', JSON.stringify(formData));
+        window.location.href = 'payment.html';
+      } else {
+        // Error - restore button and show error message
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnHTML;
+
+        // Show error notification
+        let errorContainer = document.querySelector('.order-error-msg');
+        if (!errorContainer) {
+          errorContainer = document.createElement('div');
+          errorContainer.className = 'order-error-msg';
+          errorContainer.style.cssText = 'background:#fee2e2;border:1px solid #fca5a5;padding:16px;border-radius:8px;margin-bottom:16px;color:#dc2626;text-align:center;';
+          this.insertBefore(errorContainer, this.querySelector('.order-form__fields'));
+        }
+        errorContainer.innerHTML = `
+          <p><strong>⚠️ Có lỗi xảy ra:</strong> ${pancakeResult.error}</p>
+          <p style="font-size:14px;margin-top:8px;">Vui lòng thử lại hoặc gọi hotline: <a href="tel:0945139990" style="color:#dc2626;font-weight:bold;">0945.139.990</a></p>
+        `;
+        errorContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
-      if (typeof gtag !== 'undefined') {
-        gtag('event', 'begin_checkout', {
-          currency: 'VND',
-          value: formData.total,
-          items: [{
-            item_id: 'nuoc-rua-chen-gung',
-            item_name: formData.productName,
-            price: 50000,
-            quantity: formData.quantity
-          }]
-        });
-      }
-
-      // Save to localStorage and redirect to payment
-      localStorage.setItem('enzaraOrder', JSON.stringify(formData));
-      window.location.href = 'payment.html';
     });
 
     // Initialize
