@@ -132,6 +132,7 @@
 
     const addressParts = [orderData.address];
     if (orderData.ward) addressParts.push(orderData.ward);
+    if (orderData.district) addressParts.push(orderData.district);
     if (orderData.city) addressParts.push(orderData.city);
     const fullAddress = addressParts.join(', ');
 
@@ -146,7 +147,14 @@
         full_name: orderData.fullName,
         phone_number: orderData.phone,
         address: orderData.address,
-        full_address: fullAddress
+        full_address: fullAddress,
+        province_id: orderData.provinceId,
+        province_name: orderData.city,
+        district_id: orderData.districtId,
+        district_name: orderData.district,
+        commune_id: orderData.wardId,
+        commune_name: orderData.ward,
+        country_code: '84'
       },
       parent_id: PANCAKE_CONFIG.orderSource,
       items: [{
@@ -250,6 +258,8 @@
       errors.push({ field: 'phone', message: 'Số điện thoại không hợp lệ (10 số, bắt đầu bằng 0)' });
     }
     if (!city) errors.push({ field: 'city', message: 'Vui lòng chọn Tỉnh/Thành phố' });
+    const district = form.querySelector('#district')?.value;
+    if (!district) errors.push({ field: 'district', message: 'Vui lòng chọn Quận/Huyện' });
     if (!ward) errors.push({ field: 'ward', message: 'Vui lòng chọn Phường/Xã' });
     if (!address) errors.push({ field: 'address', message: 'Vui lòng nhập địa chỉ chi tiết' });
 
@@ -301,11 +311,19 @@
     }
 
     // Collect form data
+    const cityEl = form.querySelector('#city');
+    const districtEl = form.querySelector('#district');
+    const wardEl = form.querySelector('#ward');
+
     const orderData = {
       fullName: form.querySelector('#fullName').value.trim(),
       phone: form.querySelector('#phone').value.trim(),
-      city: form.querySelector('#city').options[form.querySelector('#city').selectedIndex]?.text || '',
-      ward: form.querySelector('#ward').options[form.querySelector('#ward').selectedIndex]?.text || '',
+      provinceId: cityEl?.value || '',
+      city: cityEl?.options[cityEl.selectedIndex]?.text || '',
+      districtId: districtEl?.value || '',
+      district: districtEl?.options[districtEl.selectedIndex]?.text || '',
+      wardId: wardEl?.value || '',
+      ward: wardEl?.options[wardEl.selectedIndex]?.text || '',
       address: form.querySelector('#address').value.trim(),
       note: form.querySelector('#note')?.value?.trim() || '',
       quantity: parseInt(form.querySelector('#quantity').value) || 1

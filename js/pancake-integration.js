@@ -66,9 +66,10 @@
   async function createPancakeOrder(orderData) {
     const url = buildApiUrl('/orders');
 
-    // Build full address (Số nhà, Phường/Xã, Tỉnh/TP) - API v2 không có Quận/Huyện
+    // Build full address (Số nhà, Phường/Xã, Quận/Huyện, Tỉnh/TP)
     const addressParts = [orderData.address];
     if (orderData.ward) addressParts.push(orderData.ward);
+    if (orderData.district) addressParts.push(orderData.district);
     if (orderData.city) addressParts.push(orderData.city);
     const fullAddress = addressParts.join(', ');
 
@@ -88,7 +89,14 @@
         full_name: orderData.name,
         phone_number: orderData.phone,
         address: orderData.address,
-        full_address: fullAddress
+        full_address: fullAddress,
+        province_id: orderData.provinceId,
+        province_name: orderData.city,
+        district_id: orderData.districtId,
+        district_name: orderData.district,
+        commune_id: orderData.wardId,
+        commune_name: orderData.ward,
+        country_code: '84'
       },
 
       // Order source
