@@ -41,9 +41,54 @@
   <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="css/sections.css">
 
+  <style>
+    /* Site Header */
+    .site-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      padding: var(--space-3, 12px) 0;
+    }
+
+    .site-header .container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .site-logo img {
+      height: 36px;
+      width: auto;
+    }
+
+    @media (min-width: 768px) {
+      .site-logo img {
+        height: 44px;
+      }
+    }
+
+    /* Adjust body padding for fixed header */
+    body {
+      padding-top: 60px;
+    }
+  </style>
+
   <title>ENZARA - Nước Rửa Chén Enzyme Sinh Học | Giảm 40%</title>
 </head>
 <body>
+  <!-- Header with Logo -->
+  <header class="site-header">
+    <div class="container">
+      <a href="/" class="site-logo">
+        <img src="assets/images/enzara-logo.png" alt="ENZARA">
+      </a>
+    </div>
+  </header>
 
   <!-- ========================================
        SECTION 1: HERO AIDA
