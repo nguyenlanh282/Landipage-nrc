@@ -96,7 +96,10 @@
         district_name: orderData.district,
         commune_id: orderData.wardId,
         commune_name: orderData.ward,
-        country_code: '84'
+        country_code: '84',
+        new_province_id: orderData.newProvinceId || '',
+        new_commune_id: orderData.newCommuneId || '',
+        render_type: 'new'
       },
 
       // Order source

@@ -1966,6 +1966,7 @@
             option.value = p.id;
             option.textContent = p.name;
             option.dataset.name = p.name;
+            option.dataset.newId = p.new_id || '';
             optgroup.appendChild(option);
           });
           citySelect.appendChild(optgroup);
@@ -1978,6 +1979,7 @@
             option.value = p.id;
             option.textContent = p.name;
             option.dataset.name = p.name;
+            option.dataset.newId = p.new_id || '';
             optgroup.appendChild(option);
           });
           citySelect.appendChild(optgroup);
@@ -2039,6 +2041,7 @@
           option.value = c.id;
           option.textContent = c.name;
           option.dataset.name = c.name;
+          option.dataset.newId = c.new_id || '';
           wardSelect.appendChild(option);
         });
         wardSelect.disabled = false;
@@ -2085,10 +2088,12 @@
         fullName: document.getElementById('fullName').value,
         phone: document.getElementById('phone').value,
         provinceId: cityEl.value,
+        newProvinceId: cityEl.options[cityEl.selectedIndex]?.dataset?.newId || '',
         city: cityEl.options[cityEl.selectedIndex]?.text || '',
         districtId: districtEl.value,
         district: districtEl.options[districtEl.selectedIndex]?.text || '',
         wardId: wardEl.value,
+        newCommuneId: wardEl.options[wardEl.selectedIndex]?.dataset?.newId || '',
         ward: wardEl.options[wardEl.selectedIndex]?.text || '',
         address: document.getElementById('address').value,
         note: document.getElementById('note').value,

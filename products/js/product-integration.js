@@ -154,7 +154,10 @@
         district_name: orderData.district,
         commune_id: orderData.wardId,
         commune_name: orderData.ward,
-        country_code: '84'
+        country_code: '84',
+        new_province_id: orderData.newProvinceId || '',
+        new_commune_id: orderData.newCommuneId || '',
+        render_type: 'new'
       },
       parent_id: PANCAKE_CONFIG.orderSource,
       items: [{
@@ -319,10 +322,12 @@
       fullName: form.querySelector('#fullName').value.trim(),
       phone: form.querySelector('#phone').value.trim(),
       provinceId: cityEl?.value || '',
+      newProvinceId: cityEl?.options[cityEl.selectedIndex]?.dataset?.newId || '',
       city: cityEl?.options[cityEl.selectedIndex]?.text || '',
       districtId: districtEl?.value || '',
       district: districtEl?.options[districtEl.selectedIndex]?.text || '',
       wardId: wardEl?.value || '',
+      newCommuneId: wardEl?.options[wardEl.selectedIndex]?.dataset?.newId || '',
       ward: wardEl?.options[wardEl.selectedIndex]?.text || '',
       address: form.querySelector('#address').value.trim(),
       note: form.querySelector('#note')?.value?.trim() || '',

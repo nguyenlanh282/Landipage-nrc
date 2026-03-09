@@ -115,6 +115,7 @@
           option.value = p.id;
           option.textContent = p.name;
           option.dataset.name = p.name;
+          option.dataset.newId = p.new_id || '';
           optgroup.appendChild(option);
         });
         provinceSelect.appendChild(optgroup);
@@ -128,6 +129,7 @@
           option.value = p.id;
           option.textContent = p.name;
           option.dataset.name = p.name;
+          option.dataset.newId = p.new_id || '';
           optgroup.appendChild(option);
         });
         provinceSelect.appendChild(optgroup);
@@ -206,6 +208,7 @@
         option.value = c.id;
         option.textContent = c.name;
         option.dataset.name = c.name;
+        option.dataset.newId = c.new_id || '';
         wardSelect.appendChild(option);
       });
 
